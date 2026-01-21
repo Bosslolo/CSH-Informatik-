@@ -7,6 +7,14 @@ Jana - C
 
 # CSH-Informatik – Auto Data WebApp
 
+To-Do's
+Tim
+- [ ] Test
+Jana
+- [ ] Test
+Laurin
+- [ ] Test
+
 ## Product:
 
 * Webapp to read and visualize car data
