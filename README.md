@@ -3,7 +3,7 @@ Git Repo of all IT students
 
 Tim - HTMl
 Laurin - Routes
-Jana - C
+Jana - Backend
 
 # CSH-Informatik – Auto Data WebApp
 
