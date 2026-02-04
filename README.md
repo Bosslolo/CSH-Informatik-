@@ -51,6 +51,9 @@ Laurin
 * Dashboard
 
   * Live data view
+     * fuel level in L
+     * motor rpm 
+     * motor temp
   * Status of Bus connection
 
 * View previous recordings
