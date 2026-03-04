@@ -1,18 +1,24 @@
 # CSH-Informatik-
 Git Repo of all IT students
 
-Tim - HTMl
-Laurin - Routes
-Jana - Backend
+<span style="color:#1f77b4;">Tim</span> - HTMl  
+<span style="color:#2ca02c;">Laurin</span> - Routes  
+<span style="color:#9467bd;">Jana</span> - Backend
+
+**Color legend**
+
+- <span style="color:#1f77b4;">Tim</span>: Client / HTML / Frontend
+- <span style="color:#2ca02c;">Laurin</span>: Routes / Integration
+- <span style="color:#9467bd;">Jana</span>: Backend / Storage / CLI
 
 # CSH-Informatik – Auto Data WebApp
 
 To-Do's
-Tim
+<span style="color:#1f77b4;">Tim</span>
 - [ ] Test
-Jana
+<span style="color:#9467bd;">Jana</span>
 - [ ] Test
-Laurin
+<span style="color:#2ca02c;">Laurin</span>
 - [ ] Test
 
 ## Product:
