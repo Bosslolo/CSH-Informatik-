@@ -1,10 +1,10 @@
-## Backend Tasks (Jana)
+## Backend Tasks (<span style="color:#ff69b4;">Jana</span>)
 
 High-level tasks for **bus adapter, queue manager, API layer, and storage**.
 
 ### Summary
 
-The backend should:
+The backend should (owner: <span style="color:#ff69b4;">Jana</span>):
 
 - Start with a **simulation mode**, then support a real hardware adapter.
 - Provide stable HTTP endpoints for live data, recordings, and replay.
@@ -48,3 +48,12 @@ The backend should:
   - [ ] Align the backend’s JSON structures and endpoints with `Tasks/routes.md`.
   - [ ] Ensure `/api/status` returns enough info for CLI health checks (e.g. mode, adapter status).
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [Backend spec](../Spec/Backend/server.md)
+- [Tasks overview](overview.md)
+- [Client tasks](client.md)
+- [Routes tasks](routes.md)

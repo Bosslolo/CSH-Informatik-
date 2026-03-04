@@ -1,6 +1,6 @@
-### Client (Tim)
+### Client (<span style="color:#ff0000;">Tim</span>)
 
-High-level plan for the dashboard webapp. This file describes **what** the client should do and which tasks belong to Tim. It does not contain implementation yet.
+High-level plan for the dashboard webapp. This file describes **what** the client should do and which tasks belong to <span style="color:#ff0000;">Tim</span>. It does not contain implementation yet.
 
 ---
 
@@ -73,5 +73,12 @@ Tim should design these as reusable HTML/JS components:
 
 ---
 
-Nav  
-[Home](../../README.md)
+---
+
+#### Navigation
+
+- [Home](../../README.md)
+- [Routes spec](../Routes/readme.md)
+- [Backend spec](../Backend/server.md)
+- [CLI spec](../../Features/cli.md)
+- [Tasks overview](../../Tasks/overview.md)

@@ -37,3 +37,11 @@ The system should:
   - [ ] Plan how to generate and use **fake replay data** for testing without a car.
   - [ ] Decide how test results and issues are tracked (GitHub issues, markdown logs, etc.).
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [Tasks overview](overview.md)
+- [Project preparation](../Spec/project-preparation.md)
+

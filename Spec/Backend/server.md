@@ -1,6 +1,6 @@
-### Backend (Jana)
+### Backend (<span style="color:#ff69b4;">Jana</span>)
 
-High-level plan for backend services: bus adapter, queue manager, API, and storage. Language/stack can be TypeScript/Node or Python – this file focuses on **behavior and structure**, not the exact tech.
+High-level plan for backend services: bus adapter, queue manager, API, and storage. Language/stack can be TypeScript/Node or Python – this file focuses on **behavior and structure**, not the exact tech. Owned by <span style="color:#ff69b4;">Jana</span>.
 
 ---
 
@@ -69,7 +69,7 @@ High-level plan for backend services: bus adapter, queue manager, API, and stora
 
 ---
 
-## 6. Tasks for Jana
+## 6. Tasks for <span style="color:#ff69b4;">Jana</span>
 
 - [ ] Define the internal interfaces between bus adapter, queue manager, API layer, and data store.
 - [ ] Specify how the backend chooses between **simulation mode** and **real hardware mode**.
@@ -77,3 +77,12 @@ High-level plan for backend services: bus adapter, queue manager, API, and stora
 - [ ] Plan the logic for rate limiting and overload protection (what thresholds, what actions).
 - [ ] Describe in detail how replay reads files and pushes data to the client.
 
+---
+
+#### Navigation
+
+- [Home](../../README.md)
+- [Client spec](../Client/readme.md)
+- [Routes spec](../Routes/readme.md)
+- [CLI spec](../../Features/cli.md)
+- [Tasks: backend](../../Tasks/backend.md)

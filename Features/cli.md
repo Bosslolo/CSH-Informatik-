@@ -1,4 +1,4 @@
-# CLI Feature (Tim + Jana)
+# CLI Feature (<span style="color:#ff0000;">Tim</span> + <span style="color:#ff69b4;">Jana</span>)
 
 High-level plan for the CLI that launches the local webapp and backend.
 
@@ -77,16 +77,25 @@ On startup the CLI should:
 
 ## 6. Tasks for CLI
 
-### Tim (UX / messages)
+### <span style="color:#ff0000;">Tim</span> (UX / messages)
 
 - [ ] Design the text of startup and error messages so they are easy to understand.
 - [ ] Decide how to present URLs and current configuration after startup.
 - [ ] Plan the layout/content of any CLI help output (`adm --help`).
 
-### Jana (Process & checks)
+### <span style="color:#ff69b4;">Jana</span> (Process & checks)
 
 - [ ] Define how the CLI spawns backend and frontend processes.
 - [ ] Specify the `/api/status` contract used for health checks.
 - [ ] Describe how the CLI detects failures and exits with appropriate codes.
 - [ ] Plan how cleanup of old/stuck data works on startup.
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [Client spec](../Spec/Client/readme.md)
+- [Routes spec](../Spec/Routes/readme.md)
+- [Backend spec](../Spec/Backend/server.md)
+- [Tasks: CLI](../Tasks/cli.md)

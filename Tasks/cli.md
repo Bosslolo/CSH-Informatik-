@@ -1,4 +1,4 @@
-## CLI Tasks (Tim + Jana)
+## CLI Tasks (<span style="color:#ff0000;">Tim</span> + <span style="color:#ff69b4;">Jana</span>)
 
 High-level tasks for the **CLI command** that launches the local webapp and backend.
 
@@ -13,7 +13,7 @@ The CLI should:
 
 ### Tasks
 
-#### Tim (UX / messages)
+#### <span style="color:#ff0000;">Tim</span> (UX / messages)
 
 - **Messages & UX**
   - [ ] Draft clear startup messages (what is starting, which URLs to open, which mode is used).
@@ -29,7 +29,7 @@ The CLI should:
     - `--data-dir`
     - `--log-level`
 
-#### Jana (Process & checks)
+#### <span style="color:#ff69b4;">Jana</span> (Process & checks)
 
 - **Process management**
   - [ ] Decide how the CLI starts the backend (child process, script, etc.).
@@ -48,3 +48,11 @@ The CLI should:
   - [ ] Define an optional “graceful stop” flow (CLI command or dashboard button) and what it triggers in the backend.
   - [ ] Decide what logs are written on shutdown and where.
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [CLI spec](../Features/cli.md)
+- [Tasks overview](overview.md)
+- [Backend tasks](backend.md)

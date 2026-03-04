@@ -168,7 +168,7 @@ Use simple HTTP endpoints first; WebSockets are an optional future improvement.
 
 ## 7. Task Breakdown by Person
 
-### 7.1 Tim (Client / UI + CLI UX)
+### 7.1 <span style="color:#ff0000;">Tim</span> (Client / UI + CLI UX)
 
 - [ ] Design sidebar layout with sections for live, recordings, replay, settings.
 - [ ] Implement dashboard wireframes (HTML/CSS) focusing on visualizing live data.
@@ -176,7 +176,7 @@ Use simple HTTP endpoints first; WebSockets are an optional future improvement.
 - [ ] Define how connection status and read frequency are displayed (icons, colors, text).
 - [ ] Draft CLI user experience: startup messages, “ready” text, error formatting.
 
-### 7.2 Laurin (Routes / Integration)
+### 7.2 <span style="color:#1f77b4;">Laurin</span> (Routes / Integration)
 
 - [ ] Define concrete frontend routes and ensure navigation matches them.
 - [ ] Specify mapping from each route to backend endpoints (`/api/live`, `/api/recordings`, etc.).
@@ -184,7 +184,7 @@ Use simple HTTP endpoints first; WebSockets are an optional future improvement.
 - [ ] Specify how errors from backend are turned into simple JSON error objects and shown in the UI.
 - [ ] Plan URL structure for future public hosting (e.g. `icicles.ch`, `icicles.online`) while keeping local dev simple.
 
-### 7.3 Jana (Backend / Storage / CLI internals)
+### 7.3 <span style="color:#ff69b4;">Jana</span> (Backend / Storage / CLI internals)
 
 - [ ] Sketch backend modules: bus adapter, queue manager, API layer, file-based data store.
 - [ ] Define file/folder layout for recordings and logs (names, size limits, where saved).

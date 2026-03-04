@@ -1,10 +1,10 @@
-## Client Tasks (Tim)
+## Client Tasks (<span style="color:#ff0000;">Tim</span>)
 
 High-level tasks for the **dashboard webapp**. This is about planning UI/UX and structure, not yet coding details.
 
 ### Summary
 
-The client should:
+The client should (owner: <span style="color:#ff0000;">Tim</span>):
 
 - Provide a **sidebar-based dashboard** with pages for live data, recordings, replay, and settings.
 - Show simulated data first, then real hardware data via the backend.
@@ -40,3 +40,12 @@ The client should:
   - [ ] Note how the UI should react when CLI health checks fail (e.g. show a big status banner).
   - [ ] Define where in the UI the user can see current polling interval and interface (simulator/hardware).
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [Client spec](../Spec/Client/readme.md)
+- [Tasks overview](overview.md)
+- [Routes tasks](routes.md)
+- [Backend tasks](backend.md)

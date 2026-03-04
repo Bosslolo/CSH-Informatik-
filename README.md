@@ -1,25 +1,36 @@
 # CSH-Informatik-
 Git Repo of all IT students
 
-<span style="color:#1f77b4;">Tim</span> - HTMl  
-<span style="color:#2ca02c;">Laurin</span> - Routes  
-<span style="color:#9467bd;">Jana</span> - Backend
+<span style="color:#ff0000;">Tim</span> - HTMl  
+<span style="color:#1f77b4;">Laurin</span> - Routes  
+<span style="color:#ff69b4;">Jana</span> - Backend
 
 **Color legend**
 
-- <span style="color:#1f77b4;">Tim</span>: Client / HTML / Frontend
-- <span style="color:#2ca02c;">Laurin</span>: Routes / Integration
-- <span style="color:#9467bd;">Jana</span>: Backend / Storage / CLI
+- <span style="color:#ff0000;">Tim</span>: Client / HTML / Frontend
+- <span style="color:#1f77b4;">Laurin</span>: Routes / Integration
+- <span style="color:#ff69b4;">Jana</span>: Backend / Storage / CLI
 
 # CSH-Informatik – Auto Data WebApp
 
 To-Do's
-<span style="color:#1f77b4;">Tim</span>
+<span style="color:#ff0000;">Tim</span>
 - [ ] Test
-<span style="color:#9467bd;">Jana</span>
+<span style="color:#ff69b4;">Jana</span>
 - [ ] Test
-<span style="color:#2ca02c;">Laurin</span>
+<span style="color:#1f77b4;">Laurin</span>
 - [ ] Test
+
+---
+
+## Navigation
+
+- [Spec: Client](Spec/Client/readme.md)
+- [Spec: Routes](Spec/Routes/readme.md)
+- [Spec: Backend](Spec/Backend/server.md)
+- [Spec: CLI](Features/cli.md)
+- [Project preparation](Spec/project-preparation.md)
+- [Tasks overview](Tasks/overview.md)
 
 ## Product:
 

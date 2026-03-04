@@ -1,10 +1,10 @@
-## Routes Tasks (Laurin)
+## Routes Tasks (<span style="color:#1f77b4;">Laurin</span>)
 
 High-level tasks for **frontend routing and backend API contracts**.
 
 ### Summary
 
-Routes should:
+Routes should (owner: <span style="color:#1f77b4;">Laurin</span>):
 
 - Provide simple, memorable URLs for dashboard, recordings, replay, and settings.
 - Use **HTTP polling** to fetch live data for v1 (WebSockets can come later).
@@ -36,3 +36,12 @@ Routes should:
   - [ ] Describe how the frontend should behave on repeated failures (e.g. back off to slower polling and show an error banner).
   - [ ] Note any differences between simulation mode and hardware mode in terms of routes or behavior (if any).
 
+---
+
+#### Navigation
+
+- [Home](../README.md)
+- [Routes spec](../Spec/Routes/readme.md)
+- [Tasks overview](overview.md)
+- [Client tasks](client.md)
+- [Backend tasks](backend.md)

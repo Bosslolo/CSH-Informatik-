@@ -1,6 +1,6 @@
-### Routes (Laurin)
+### Routes (<span style="color:#1f77b4;">Laurin</span>)
 
-High-level plan for frontend routes and their connection to backend APIs. This file focuses on **URLs, responsibilities, and data flow**, not implementation.
+High-level plan for frontend routes and their connection to backend APIs. This file focuses on **URLs, responsibilities, and data flow**, not implementation. Owned by <span style="color:#1f77b4;">Laurin</span>.
 
 ---
 
@@ -55,7 +55,7 @@ Local development base URL: `http://localhost:<port>`.
 
 ---
 
-## 4. Tasks for Laurin
+## 4. Tasks for <span style="color:#1f77b4;">Laurin</span>
 
 - [ ] Confirm and document the final list of routes and what each page shows.
 - [ ] Define the exact shapes of responses for `GET /api/live`, `GET /api/recordings`, `GET /api/recordings/:id`.
@@ -63,3 +63,12 @@ Local development base URL: `http://localhost:<port>`.
 - [ ] Plan the polling strategy for live data (interval, backoff on errors).
 - [ ] Add notes on how domain names (e.g. `icicles.ch`) would point to the dashboard in a later phase.
 
+---
+
+#### Navigation
+
+- [Home](../../README.md)
+- [Client spec](../Client/readme.md)
+- [Backend spec](../Backend/server.md)
+- [CLI spec](../../Features/cli.md)
+- [Tasks: routes](../../Tasks/routes.md)
