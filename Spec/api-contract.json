@@ -1,0 +1,11 @@
+{
+  "status": "connected",
+  "read_interval_ms": 1000,
+  "data": {
+    "rpm": 2500,
+    "temp_celsius": 92,
+    "fuel_liters": 45.5,
+    "speed_kmh": 0
+  },
+  "simulation_mode": true
+}

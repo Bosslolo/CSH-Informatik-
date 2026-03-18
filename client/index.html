@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSH-Auto Dashboard</title>
+    <style>
+        body { font-family: sans-serif; background: #111; color: #eee; text-align: center; }
+        .gauge { border: 2px solid #1f77b4; padding: 2rem; border-radius: 1rem; display: inline-block; margin-top: 5rem; }
+        #rpm { font-size: 4rem; font-weight: bold; color: #1f77b4; }
+        #status { font-size: 0.8rem; color: #666; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="gauge">
+        <div>MOTOR RPM</div>
+        <div id="rpm">---</div>
+        <div id="status">Connecting to Backend...</div>
+    </div>
+
+    <script>
+        async function fetchLiveData() {
+            try {
+                const response = await fetch('http://localhost:3000/api/live');
+                const result = await response.json();
+                document.getElementById('rpm').innerText = result.data.rpm;
+                document.getElementById('status').innerText = `Status: ${result.status} | Polling: ${result.read_interval_ms}ms`;
+            } catch (err) {
+                document.getElementById('status').innerText = "Backend disconnected";
+            }
+        }
+
+        // Poll every second
+        setInterval(fetchLiveData, 1000);
+        fetchLiveData(); // Initial call
+    </script>
+</body>
+</html>
