@@ -3,96 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>CSH-Auto Dashboard</title>
-    <style>
-        body { font-family: sans-serif; background: #111; color: #eee; text-align: center; }
-        .gauge { border: 2px solid #1f77b4; padding: 2rem; border-radius: 1rem; display: inline-block; margin-top: 5rem; }
-        #rpm { font-size: 4rem; font-weight: bold; color: #1f77b4; }
-        #status { font-size: 0.8rem; color: #666; margin-top: 1rem; }
-    </style>
-</head>
-<body>
-    <div class="gauge">
-        <div>MOTOR RPM</div>
-        <div id="rpm">---</div>
-        <div id="status">Connecting to Backend...</div>
-    </div>
-
-    <script>
-        async function fetchLiveData() {
-            try {
-                const response = await fetch('http://localhost:3000/api/live');
-                const result = await response.json();
-                document.getElementById('rpm').innerText = result.data.rpm;
-                document.getElementById('status').innerText = `Status: ${result.status} | Polling: ${result.read_interval_ms}ms`;
-            } catch (err) {
-                document.getElementById('status').innerText = "Backend disconnected";
-            }
-        }
-
-        // Poll every second
-        setInterval(fetchLiveData, 1000);
-        fetchLiveData(); // Initial call
-=======
     <title>CSH Auto Data Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 80%; max-width: 800px; margin-top: 20px; }
-        .card { background: #2d2d2d; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; border-top: 4px solid #3498db; }
-        .value { font-size: 2.5em; font-weight: bold; margin: 10px 0; color: #3498db; }
-        .label { color: #888; text-transform: uppercase; font-size: 0.9em; }
-        .status { margin-bottom: 20px; padding: 10px 20px; border-radius: 20px; background: #27ae60; font-weight: bold; }
-        .timestamp { margin-top: 30px; color: #555; font-size: 0.8em; }
-        h1 { color: #f1c40f; }
+        :root {
+            --bg: #0a0b0d;
+            --card-bg: #161b22;
+            --neon-blue: #58a6ff;
+            --neon-red: #ff7b72;
+            --neon-green: #3fb950;
+            --neon-gold: #d29922;
+            --text: #c9d1d9;
+        }
+
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 40px 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        h1 { margin: 0; font-size: 2rem; letter-spacing: 2px; color: var(--neon-gold); text-transform: uppercase; }
+        
+        .system-status {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .badge-online { background: rgba(63, 185, 80, 0.15); color: var(--neon-green); border-color: var(--neon-green); }
+        .badge-sync { background: rgba(88, 166, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); }
+        .badge-secure { background: rgba(210, 153, 34, 0.15); color: var(--neon-gold); border-color: var(--neon-gold); }
+
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; 
+            width: 100%; 
+            max-width: 1000px; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5); 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .card:hover { transform: translateY(-5px); }
+
+        .value { font-size: 3rem; font-weight: 800; margin: 10px 0; font-family: 'Monaco', monospace; }
+        .label { color: #8b949e; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        
+        .rpm-value { color: var(--neon-blue); text-shadow: 0 0 10px rgba(88, 166, 255, 0.3); }
+        .speed-value { color: var(--neon-red); text-shadow: 0 0 10px rgba(255, 123, 114, 0.3); }
+        .fuel-value { color: var(--neon-gold); text-shadow: 0 0 10px rgba(210, 153, 34, 0.3); }
+        .temp-value { color: var(--neon-green); text-shadow: 0 0 10px rgba(63, 185, 80, 0.3); }
+
+        .timestamp { 
+            margin-top: auto; 
+            padding-top: 40px;
+            color: #484f58; 
+            font-size: 0.75rem; 
+            font-family: monospace;
+        }
+
+        /* Engine Heartbeat Animation */
+        .heartbeat {
+            width: 12px;
+            height: 12px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px var(--neon-green);
+            animation: pulse 1s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .warning { color: var(--neon-red) !important; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
-    <h1>🚗 CSH Auto Data Machine</h1>
-    <div id="status" class="status">SYSTEM ONLINE (UTC SYNC)</div>
+    <div class="header">
+        <h1>CSH Auto Data Machine</h1>
+        <div class="system-status">
+            <div id="status-badge" class="badge badge-online">
+                <span class="heartbeat"></span>System Online
+            </div>
+            <div class="badge badge-sync">US/UTC Synced</div>
+            <div class="badge badge-secure">Secure AES-v1</div>
+        </div>
+    </div>
     
     <div class="dashboard">
         <div class="card">
             <div class="label">Engine RPM</div>
-            <div id="rpm" class="value">0</div>
+            <div id="rpm" class="value rpm-value">0</div>
         </div>
-        <div class="card" style="border-top-color: #e74c3c;">
+        <div class="card">
             <div class="label">Speed (KM/H)</div>
-            <div id="speed" class="value">0</div>
+            <div id="speed" class="value speed-value">0</div>
         </div>
-        <div class="card" style="border-top-color: #f1c40f;">
+        <div class="card">
             <div class="label">Fuel Level (L)</div>
-            <div id="fuel" class="value">0.0</div>
+            <div id="fuel" class="value fuel-value">0.0</div>
         </div>
-        <div class="card" style="border-top-color: #2ecc71;">
-            <div class="label">Motor Temp (°C)</div>
-            <div id="temp" class="value">0.0</div>
+        <div class="card">
+            <div class="label">Motor Temp</div>
+            <div id="temp" class="value temp-value">0.0°C</div>
         </div>
     </div>
 
-    <div id="time" class="timestamp">Syncing with US timezone...</div>
+    <div id="time" class="timestamp">Fetching UTC telemetry...</div>
 
     <script>
         async function updateDashboard() {
             try {
-                const response = await fetch('http://localhost:3000/api/live', {
+                const response = await fetch('http://127.0.0.1:3000/api/live', {
                     headers: { 'x-api-key': 'csh-secure-v1' }
                 });
                 const data = await response.json();
                 
-                document.getElementById('rpm').innerText = Math.round(data.rpm);
+                // Update Values
+                document.getElementById('rpm').innerText = Math.round(data.rpm).toLocaleString();
                 document.getElementById('speed').innerText = Math.round(data.speed_kmh);
                 document.getElementById('fuel').innerText = data.fuel_liters.toFixed(2);
-                document.getElementById('temp').innerText = data.motor_temp.toFixed(1);
-                document.getElementById('time').innerText = 'UTC Timestamp: ' + data.timestamp;
+                document.getElementById('temp').innerText = data.motor_temp.toFixed(1) + '°C';
+                
+                // US Time-zone Sync display
+                document.getElementById('time').innerText = 'UTC SYNC ACTIVE // ' + data.timestamp;
+
+                // Simple Logic: Warning colors
+                if (data.fuel_liters < 5) document.getElementById('fuel').classList.add('warning');
+                else document.getElementById('fuel').classList.remove('warning');
+
+                if (data.motor_temp > 95) document.getElementById('temp').classList.add('warning');
+                else document.getElementById('temp').classList.remove('warning');
+
+                // Adjust heartbeat speed based on RPM
+                const pulseRate = Math.max(0.2, 2 - (data.rpm / 4000));
+                document.querySelector('.heartbeat').style.animationDuration = pulseRate + 's';
+
             } catch (err) {
-                document.getElementById('status').innerText = 'BACKEND OFFLINE';
-                document.getElementById('status').style.background = '#c0392b';
+                const badge = document.getElementById('status-badge');
+                badge.innerText = 'Backend Offline';
+                badge.className = 'badge';
+                badge.style.background = 'rgba(255, 123, 114, 0.15)';
+                badge.style.color = 'var(--neon-red)';
             }
         }
-        setInterval(updateDashboard, 1000);
+        setInterval(updateDashboard, 500); // Faster polling for smoother feel
         updateDashboard();
->>>>>>> 4b6632f (Merging our Synthesis Tool into the team structure (cli/ and client/))
     </script>
 </body>
 </html>
