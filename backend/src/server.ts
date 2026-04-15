@@ -45,14 +45,12 @@ app.get('/api/status', (req, res) => {
   res.json({
     status: 'online',
     mode: 'simulation',
-    engine_running: true,
-    timezone: 'UTC', // Explicitly stating we use UTC
+    engine_running: true
   });
 });
 
 app.listen(port, () => {
   console.log(`\n🚗 Car Synthesis Tool is Running`);
   console.log(`- API URL: http://localhost:${port}/api/live`);
-  console.log(`- Status: http://localhost:${port}/api/status`);
-  console.log(`- Timezone: UTC (ISO 8601)\n`);
+  console.log(`- Status: http://localhost:${port}/api/status\n`);
 });

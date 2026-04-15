@@ -34,14 +34,14 @@ const backend = spawn('npm', ['run', 'dev'], {
 });
 
 // 2. Health Check before opening dashboard
-console.log("Waiting for backend to sync with US timezone...");
+console.log("Waiting for backend to start...");
 
 function checkStatus() {
     http.get('http://localhost:3000/api/status', {
         headers: { 'x-api-key': 'csh-secure-v1' }
     }, (res) => {
         if (res.statusCode === 200) {
-            console.log("\n✅ BACKEND READY & UTC SYNCED");
+            console.log("\n✅ BACKEND READY");
             console.log("📍 Dashboard: http://localhost:3000\n");
             
             const openCmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';

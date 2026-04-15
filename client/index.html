@@ -46,7 +46,6 @@
         }
 
         .badge-online { background: rgba(63, 185, 80, 0.15); color: var(--neon-green); border-color: var(--neon-green); }
-        .badge-sync { background: rgba(88, 166, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); }
         .badge-secure { background: rgba(210, 153, 34, 0.15); color: var(--neon-gold); border-color: var(--neon-gold); }
 
         .dashboard { 
@@ -114,7 +113,6 @@
             <div id="status-badge" class="badge badge-online">
                 <span class="heartbeat"></span>System Online
             </div>
-            <div class="badge badge-sync">US/UTC Synced</div>
             <div class="badge badge-secure">Secure AES-v1</div>
         </div>
     </div>
@@ -138,7 +136,7 @@
         </div>
     </div>
 
-    <div id="time" class="timestamp">Fetching UTC telemetry...</div>
+    <div id="time" class="timestamp">Fetching telemetry...</div>
 
     <script>
         async function updateDashboard() {
@@ -154,8 +152,8 @@
                 document.getElementById('fuel').innerText = data.fuel_liters.toFixed(2);
                 document.getElementById('temp').innerText = data.motor_temp.toFixed(1) + '°C';
                 
-                // US Time-zone Sync display
-                document.getElementById('time').innerText = 'UTC SYNC ACTIVE // ' + data.timestamp;
+                // Local Telemetry Display
+                document.getElementById('time').innerText = 'TELEMETRY LIVE // ' + data.timestamp;
 
                 // Simple Logic: Warning colors
                 if (data.fuel_liters < 5) document.getElementById('fuel').classList.add('warning');

@@ -19,7 +19,7 @@ export class CarSynthesis {
       fuel_liters: 45.5,
       motor_temp: 20,
       gear: 1,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleTimeString(),
     };
     this.startSimulation();
   }
@@ -53,8 +53,8 @@ export class CarSynthesis {
         this.state.speed_kmh = Math.max(0, Math.min(180, this.state.speed_kmh + (Math.random() - 0.4) * 10));
       }
 
-      // Update timestamp to UTC
-      this.state.timestamp = new Date().toISOString();
+      // Update timestamp
+      this.state.timestamp = new Date().toLocaleTimeString();
     }, 1000);
   }
 
