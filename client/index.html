@@ -3,179 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSH Auto Data Dashboard</title>
+    <title>CSH Auto - RPM Monitor</title>
     <style>
-        :root {
-            --bg: #0a0b0d;
-            --card-bg: #161b22;
-            --neon-blue: #58a6ff;
-            --neon-red: #ff7b72;
-            --neon-green: #3fb950;
-            --neon-gold: #d29922;
-            --text: #c9d1d9;
-        }
-
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #0d1117; 
+            color: #c9d1d9; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 40px 20px;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            min-height: 100vh;
         }
 
-        .header { text-align: center; margin-bottom: 40px; }
-        h1 { margin: 0; font-size: 2rem; letter-spacing: 2px; color: var(--neon-gold); text-transform: uppercase; }
-        
-        .system-status {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
+        .header { margin-bottom: 30px; text-align: center; }
+        h1 { color: #58a6ff; font-size: 1.5rem; letter-spacing: 1px; }
+
+        .rpm-card { 
+            background: #161b22; 
+            padding: 50px; 
+            border-radius: 16px; 
+            border: 1px solid #30363d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            min-width: 280px;
         }
 
-        .badge {
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.1);
+        .label { color: #8b949e; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
+        .value { font-size: 5rem; font-weight: bold; color: #58a6ff; font-family: 'Courier New', Courier, monospace; }
+        .unit { font-size: 1.2rem; color: #484f58; margin-top: -10px; font-weight: bold; }
+
+        .status-bar {
+            margin-top: 30px;
+            padding: 5px 15px;
+            background: rgba(56, 139, 253, 0.1);
+            border: 1px solid rgba(56, 139, 253, 0.4);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #58a6ff;
         }
 
-        .badge-online { background: rgba(63, 185, 80, 0.15); color: var(--neon-green); border-color: var(--neon-green); }
-        .badge-secure { background: rgba(210, 153, 34, 0.15); color: var(--neon-gold); border-color: var(--neon-gold); }
-
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 20px; 
-            width: 100%; 
-            max-width: 1000px; 
-        }
-
-        .card { 
-            background: var(--card-bg); 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5); 
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.2s;
-        }
-        
-        .card:hover { transform: translateY(-5px); }
-
-        .value { font-size: 3rem; font-weight: 800; margin: 10px 0; font-family: 'Monaco', monospace; }
-        .label { color: #8b949e; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        
-        .rpm-value { color: var(--neon-blue); text-shadow: 0 0 10px rgba(88, 166, 255, 0.3); }
-        .speed-value { color: var(--neon-red); text-shadow: 0 0 10px rgba(255, 123, 114, 0.3); }
-        .fuel-value { color: var(--neon-gold); text-shadow: 0 0 10px rgba(210, 153, 34, 0.3); }
-        .temp-value { color: var(--neon-green); text-shadow: 0 0 10px rgba(63, 185, 80, 0.3); }
-
-        .timestamp { 
-            margin-top: auto; 
-            padding-top: 40px;
-            color: #484f58; 
-            font-size: 0.75rem; 
-            font-family: monospace;
-        }
-
-        /* Engine Heartbeat Animation */
-        .heartbeat {
-            width: 12px;
-            height: 12px;
-            background: var(--neon-green);
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            box-shadow: 0 0 8px var(--neon-green);
-            animation: pulse 1s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.7; }
-        }
-
-        .warning { color: var(--neon-red) !important; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        .timestamp { margin-top: 20px; font-size: 0.7rem; color: #484f58; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>CSH Auto Data Machine</h1>
-        <div class="system-status">
-            <div id="status-badge" class="badge badge-online">
-                <span class="heartbeat"></span>System Online
-            </div>
-            <div class="badge badge-secure">Secure AES-v1</div>
-        </div>
-    </div>
-    
-    <div class="dashboard">
-        <div class="card">
-            <div class="label">Engine RPM</div>
-            <div id="rpm" class="value rpm-value">0</div>
-        </div>
-        <div class="card">
-            <div class="label">Speed (KM/H)</div>
-            <div id="speed" class="value speed-value">0</div>
-        </div>
-        <div class="card">
-            <div class="label">Fuel Level (L)</div>
-            <div id="fuel" class="value fuel-value">0.0</div>
-        </div>
-        <div class="card">
-            <div class="label">Motor Temp</div>
-            <div id="temp" class="value temp-value">0.0°C</div>
-        </div>
     </div>
 
+    <div class="rpm-card">
+        <div class="label">Engine Speed</div>
+        <div id="rpm" class="value">0</div>
+        <div class="unit">RPM</div>
+    </div>
+
+    <div id="status" class="status-bar">System Online // Secure Connection</div>
     <div id="time" class="timestamp">Fetching telemetry...</div>
 
     <script>
-        async function updateDashboard() {
+        async function updateRPM() {
             try {
                 const response = await fetch('http://127.0.0.1:3000/api/live', {
                     headers: { 'x-api-key': 'csh-secure-v1' }
                 });
                 const data = await response.json();
                 
-                // Update Values
                 document.getElementById('rpm').innerText = Math.round(data.rpm).toLocaleString();
-                document.getElementById('speed').innerText = Math.round(data.speed_kmh);
-                document.getElementById('fuel').innerText = data.fuel_liters.toFixed(2);
-                document.getElementById('temp').innerText = data.motor_temp.toFixed(1) + '°C';
-                
-                // Local Telemetry Display
-                document.getElementById('time').innerText = 'TELEMETRY LIVE // ' + data.timestamp;
-
-                // Simple Logic: Warning colors
-                if (data.fuel_liters < 5) document.getElementById('fuel').classList.add('warning');
-                else document.getElementById('fuel').classList.remove('warning');
-
-                if (data.motor_temp > 95) document.getElementById('temp').classList.add('warning');
-                else document.getElementById('temp').classList.remove('warning');
-
-                // Adjust heartbeat speed based on RPM
-                const pulseRate = Math.max(0.2, 2 - (data.rpm / 4000));
-                document.querySelector('.heartbeat').style.animationDuration = pulseRate + 's';
-
+                document.getElementById('time').innerText = 'LAST UPDATE: ' + data.timestamp;
             } catch (err) {
-                const badge = document.getElementById('status-badge');
-                badge.innerText = 'Backend Offline';
-                badge.className = 'badge';
-                badge.style.background = 'rgba(255, 123, 114, 0.15)';
-                badge.style.color = 'var(--neon-red)';
+                document.getElementById('rpm').innerText = "OFFLINE";
+                document.getElementById('rpm').style.color = "#ff7b72";
+                document.getElementById('status').innerText = "Backend Connection Failed";
             }
         }
-        setInterval(updateDashboard, 500); // Faster polling for smoother feel
-        updateDashboard();
+        setInterval(updateRPM, 500);
+        updateRPM();
     </script>
 </body>
 </html>
