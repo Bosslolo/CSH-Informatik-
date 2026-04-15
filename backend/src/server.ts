@@ -1,10 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { CarSynthesis } from './synthesis';
 
 const app = express();
 const port = process.env.PORT || 3000;
 const car = new CarSynthesis();
+
+// Serve the dashboard (Frontend)
+app.use(express.static(path.join(__dirname, '../../client')));
 
 // Simple API Key for "Security"
 const API_KEY = 'csh-secure-v1';

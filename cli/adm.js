@@ -42,9 +42,10 @@ function checkStatus() {
     }, (res) => {
         if (res.statusCode === 200) {
             console.log("\n✅ BACKEND READY & UTC SYNCED");
-            console.log("📍 Dashboard: http://localhost:3000/dashboard (In development, open index.html locally)");
-            console.log("📍 API URL:   http://localhost:3000/api/live\n");
-            // In a real CLI we would open the browser here
+            console.log("📍 Dashboard: http://localhost:3000\n");
+            
+            const openCmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+            spawn(openCmd, ['http://localhost:3000'], { shell: true });
         } else {
             setTimeout(checkStatus, 500);
         }
