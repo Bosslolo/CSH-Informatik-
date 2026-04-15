@@ -28,7 +28,7 @@ console.log("\n🚗 CSH-Auto-Data-Machine (ADM) Starting...");
 
 // 1. Start Backend
 const backend = spawn('npm', ['run', 'dev'], { 
-    cwd: path.join(__dirname, 'backend'),
+    cwd: path.join(__dirname, '../backend'),
     shell: true,
     stdio: 'inherit'
 });
