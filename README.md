@@ -17,9 +17,19 @@ To-Do's
 <span style="color:#ff0000;">Tim</span>
 - [ ] Test
 <span style="color:#ff69b4;">Jana</span>
+- [x] Car Synthesis Tool (Emulation)
+- [x] Secure JSON Interface
+- [x] UTC Timezone Sync
 - [ ] Test
 <span style="color:#1f77b4;">Laurin</span>
 - [ ] Test
+
+## 🚀 Quick Start
+Run the following to start the backend:
+```bash
+./adm.js
+```
+Then open `frontend/index.html` in your browser.
 
 ---
 
