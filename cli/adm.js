@@ -37,7 +37,9 @@ const backend = spawn('npm', ['run', 'dev'], {
 console.log("Waiting for backend to sync with US timezone...");
 
 function checkStatus() {
-    http.get('http://localhost:3000/api/status', (res) => {
+    http.get('http://localhost:3000/api/status', {
+        headers: { 'x-api-key': 'csh-secure-v1' }
+    }, (res) => {
         if (res.statusCode === 200) {
             console.log("\n✅ BACKEND READY & UTC SYNCED");
             console.log("📍 Dashboard: http://localhost:3000/dashboard (In development, open index.html locally)");

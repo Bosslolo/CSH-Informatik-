@@ -75,7 +75,9 @@
     <script>
         async function updateDashboard() {
             try {
-                const response = await fetch('http://localhost:3000/api/live');
+                const response = await fetch('http://localhost:3000/api/live', {
+                    headers: { 'x-api-key': 'csh-secure-v1' }
+                });
                 const data = await response.json();
                 
                 document.getElementById('rpm').innerText = Math.round(data.rpm);
