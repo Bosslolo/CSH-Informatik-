@@ -1,11 +1,99 @@
 {
-  "status": "connected",
-  "read_interval_ms": 1000,
-  "data": {
-    "rpm": 2500,
-    "temp_celsius": 92,
-    "fuel_liters": 45.5,
-    "speed_kmh": 0
+  "base_url": "http://localhost:4000",
+  "security": {
+    "header": "x-api-key",
+    "value": "csh-secure-v1"
   },
-  "simulation_mode": true
+  "profiles": ["simulation", "hardware_elm327", "replay_file"],
+  "data_source_shape": {
+    "kind": "simulation",
+    "label": "Built-in simulator",
+    "trust": "synthetic",
+    "is_real_vehicle": false,
+    "detail": null
+  },
+  "trust_values": ["verified", "recorded", "synthetic", "demo", "degraded"],
+  "endpoints": {
+    "GET /api/live": {
+      "example": {
+        "rpm": 820,
+        "speed_kmh": 0,
+        "fuel_liters": 45.5,
+        "motor_temp": 88,
+        "gear": 1,
+        "battery_voltage": 12.4,
+        "throttle_percent": 0,
+        "intake_air_temp": 22,
+        "timestamp": "2026-05-20T12:00:00.000Z",
+        "temperature": 88,
+        "connected": true,
+        "mode": "simulation",
+        "profile": "simulation",
+        "read_interval_ms": 1000,
+        "last_error": null,
+        "data_source": {
+          "kind": "simulation",
+          "label": "Built-in simulator",
+          "trust": "synthetic",
+          "is_real_vehicle": false,
+          "detail": null
+        }
+      }
+    },
+    "GET /api/status": {
+      "example": {
+        "backend": "OK",
+        "bus": "CONNECTED",
+        "status": "online",
+        "profile": "simulation",
+        "connected": true,
+        "mode": "simulation",
+        "engine_running": true,
+        "last_error": null,
+        "serial_path": null,
+        "data_source": {
+          "kind": "simulation",
+          "label": "Built-in simulator",
+          "trust": "synthetic",
+          "is_real_vehicle": false,
+          "detail": null
+        }
+      }
+    },
+    "GET /api/recordings": {
+      "example": {
+        "data_source": {
+          "kind": "demo_catalog",
+          "label": "Demo recordings",
+          "trust": "demo",
+          "is_real_vehicle": false,
+          "detail": null
+        },
+        "recordings": [
+          {
+            "id": "demo-001",
+            "name": "Morning City Drive",
+            "finished_at": "2026-03-10T07:42:00Z",
+            "size_bytes": 1824112,
+            "source_kind": "demo"
+          }
+        ]
+      }
+    },
+    "GET /api/session": {
+      "example": {
+        "profile": "simulation",
+        "serial_path": "",
+        "replay_file": "",
+        "read_interval_ms": 1000
+      }
+    },
+    "POST /api/session": {
+      "body_example": {
+        "interface": "simulator",
+        "serial_path": "/dev/tty.usbserial-1410",
+        "read_interval_ms": 1000
+      }
+    }
+  }
 }

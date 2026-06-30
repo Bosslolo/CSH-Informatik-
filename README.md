@@ -24,11 +24,29 @@ To-Do's
 - [ ] Test
 
 ## 🚀 Quick Start
-Run the following to start the backend:
+
+From the project root:
+
 ```bash
-./adm.js
+cd backend && npm install && cd ..
+node cli/adm.js
 ```
-Then open `frontend/index.html` in your browser.
+
+Or use npm:
+
+```bash
+npm start
+```
+
+This starts the TypeScript backend on **http://localhost:4000** and opens the dashboard in your browser. All API calls require header `x-api-key: csh-secure-v1`.
+
+Optional environment variables:
+
+- `BUS_PROFILE` — `simulation` (default), `hardware_elm327`, or `replay_file`
+- `SERIAL_PATH` — serial device for ELM327 cables (e.g. `/dev/tty.usbserial-*`)
+- `REPLAY_FILE` — path to a JSON/JSONL recording when using `replay_file`
+
+See [explain.md](explain.md) for a plain-language overview.
 
 ---
 

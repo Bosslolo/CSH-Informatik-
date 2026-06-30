@@ -30,7 +30,7 @@ adm --interface simulator
 ## 3. Flags / Options (v1)
 
 - `--port <number>`
-  - Port for the dashboard/backend (default e.g. `3000`).
+  - Port for the dashboard/backend (default e.g. `4000`).
 
 - `--poll-interval-ms <number>`
   - Polling interval in milliseconds (default safe value, e.g. `1000`).
