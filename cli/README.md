@@ -21,10 +21,11 @@ One script that starts the backend and opens the dashboard in your browser.
 From repo root:
 
 ```bash
-node cli/adm.js
-# or
+cd package
 npm start
 ```
+
+Or double-click **`package/Start CSH Auto Data.command`** (macOS).
 
 ## Spec
 

@@ -1,0 +1,16 @@
+{
+  "name": "csh-auto-data",
+  "version": "1.2.0",
+  "description": "One-click package — start the CSH Auto Data dashboard",
+  "private": true,
+  "scripts": {
+    "start": "node ../cli/adm.js",
+    "postinstall": "npm install --prefix ../backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bosslolo/CSH-Informatik-.git",
+    "directory": "package"
+  },
+  "license": "ISC"
+}

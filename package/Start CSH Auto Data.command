@@ -1,8 +1,8 @@
 #!/bin/bash
-# Double-click this file (macOS) to install deps if needed, start the server, and open the dashboard.
+# Double-click (macOS): install if needed, start server, open dashboard.
 set -e
-ROOT="$(cd "$(dirname "$0")" && pwd)"
-cd "$ROOT"
+PKG="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$PKG/.." && pwd)"
 
 echo ""
 echo "  CSH Auto Data — starting..."
@@ -14,10 +14,11 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
-if [ ! -d "backend/node_modules" ]; then
+if [ ! -d "$ROOT/backend/node_modules" ]; then
   echo "  First run: installing backend dependencies..."
-  (cd backend && npm install)
+  (cd "$ROOT/backend" && npm install)
   echo ""
 fi
 
+cd "$PKG"
 npm start

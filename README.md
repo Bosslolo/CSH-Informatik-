@@ -12,34 +12,35 @@ Shared repo for the IT class. Local dashboard that reads car bus data (or simula
 
 ## Quick start
 
-**One click (macOS):** double-click [`Start CSH Auto Data.command`](Start%20CSH%20Auto%20Data.command) — installs backend deps on first run, starts the server, opens **http://localhost:4000**.
+**One click (macOS):** open [`package/`](package/) → double-click **`Start CSH Auto Data.command`**.
 
-Or from the terminal:
+Or terminal:
 
 ```bash
-cd backend && npm install && cd ..
-npm start
+cd package && npm start
 ```
 
 ## Repository map
 
 ```
 CSH-Informatik-/
-├── README.md          ← you are here (only doc at repo root)
-├── client/            Tim — dashboard UI
-├── backend/           Jana — HTTP API + bus adapters
-├── cli/               Jana — launcher script
-├── data/              Jana — replay sample files
-└── docs/              Specs, tasks, API contract
+├── README.md       ← you are here
+├── package/        ← one-click launcher (first package)
+├── client/         Tim — dashboard UI
+├── backend/        Jana — HTTP API + bus adapters
+├── cli/            Jana — launcher script
+├── data/           Jana — replay samples
+└── docs/           specs and guides
 ```
 
 | Folder | README |
 |--------|--------|
+| **Package (start here)** | [`package/README.md`](package/README.md) |
 | Client (Tim) | [`client/README.md`](client/README.md) |
 | Backend (Jana) | [`backend/README.md`](backend/README.md) |
 | CLI (Jana) | [`cli/README.md`](cli/README.md) |
 | Routes (Laurin) | [`docs/routes/README.md`](docs/routes/README.md) |
-| All documentation | [`docs/README.md`](docs/README.md) |
+| Documentation | [`docs/README.md`](docs/README.md) |
 
 ## Git workflow (class test)
 

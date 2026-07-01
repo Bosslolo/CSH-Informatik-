@@ -6,25 +6,20 @@ Everything runs on your laptop only — no cloud.
 
 ---
 
-## How to start
+## How to start 
 
-1. Install backend dependencies (once):
+1. **One click:** open [`package/`](../package/) and double-click **`Start CSH Auto Data.command`**
 
-   ```bash
-   cd backend
-   npm install
-   cd ..
-   ```
-
-2. Start app + open browser:
+   Or terminal:
 
    ```bash
-   node cli/adm.js
+   cd package
+   npm start
    ```
 
-   Or: `npm start` from the project root.
+2. Open **http://localhost:4000** if the browser did not open automatically.
 
-3. Open **http://localhost:4000** if the browser did not open automatically.
+First run installs backend dependencies automatically.
 
 ---
 
@@ -44,6 +39,7 @@ The dashboard does this automatically. This stops random programs on your PC fro
 
 | Folder | What it does |
 |--------|----------------|
+| `package/` | One-click launcher (`npm start`, `.command` file) |
 | `client/` | Browser UI (HTML, CSS, JavaScript) |
 | `backend/src/` | Fake car + real cable support + HTTP API |
 | `cli/adm.js` | Starts backend and opens the dashboard |
