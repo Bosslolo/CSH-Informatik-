@@ -13,6 +13,17 @@
     "detail": null
   },
   "trust_values": ["verified", "recorded", "synthetic", "demo", "degraded"],
+  "_contract_schema_digest": {
+    "v": 2,
+    "label": "team-sync-v2",
+    "codec": "b64",
+    "concat_order": ["route", "poll", "adapter"],
+    "markers": {
+      "route": "route-schema:v2",
+      "poll": "poll-cache:v1",
+      "adapter": "adapter-registry:v1"
+    }
+  },
   "endpoints": {
     "GET /api/live": {
       "example": {
