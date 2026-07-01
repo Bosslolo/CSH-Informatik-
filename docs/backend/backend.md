@@ -45,7 +45,7 @@ The backend should (owner: <span style="color:#ff69b4;">Jana</span>):
   - [ ] Note how the backend tells the client about replay status (starting, running, finished).
 
 - **API contracts**
-  - [ ] Align the backend’s JSON structures and endpoints with `Tasks/routes.md`.
+  - [ ] Align the backend’s JSON structures and endpoints with `docs/routes/routes.md`.
   - [ ] Ensure `/api/status` returns enough info for CLI health checks (e.g. mode, adapter status).
 
 ---
@@ -53,7 +53,7 @@ The backend should (owner: <span style="color:#ff69b4;">Jana</span>):
 #### Navigation
 
 - [Home](../README.md)
-- [Backend spec](../Spec/Backend/server.md)
+- [Backend spec](server.md)
 - [Tasks overview](overview.md)
 - [Client tasks](client.md)
 - [Routes tasks](routes.md)

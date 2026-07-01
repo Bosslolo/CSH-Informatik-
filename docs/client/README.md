@@ -80,5 +80,5 @@ Tim should design these as reusable HTML/JS components:
 - [Home](../../README.md)
 - [Routes spec](../Routes/readme.md)
 - [Backend spec](../Backend/server.md)
-- [CLI spec](../../Features/cli.md)
-- [Tasks overview](../../Tasks/overview.md)
+- [CLI spec](../cli/spec.md)
+- [Tasks overview](../tasks/overview.md)

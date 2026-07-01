@@ -95,7 +95,7 @@ On startup the CLI should:
 #### Navigation
 
 - [Home](../README.md)
-- [Client spec](../Spec/Client/readme.md)
-- [Routes spec](../Spec/Routes/readme.md)
-- [Backend spec](../Spec/Backend/server.md)
-- [Tasks: CLI](../Tasks/cli.md)
+- [Client spec](../client/README.md)
+- [Routes spec](../routes/README.md)
+- [Backend spec](../backend/server.md)
+- [Tasks: CLI](../tasks/cli.md)

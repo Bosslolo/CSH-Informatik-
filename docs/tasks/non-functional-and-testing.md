@@ -43,5 +43,5 @@ The system should:
 
 - [Home](../README.md)
 - [Tasks overview](overview.md)
-- [Project preparation](../Spec/project-preparation.md)
+- [Project preparation](../project-preparation.md)
 

@@ -53,6 +53,6 @@ The CLI should:
 #### Navigation
 
 - [Home](../README.md)
-- [CLI spec](../Features/cli.md)
+- [CLI spec](../cli/spec.md)
 - [Tasks overview](overview.md)
 - [Backend tasks](backend.md)

@@ -1,180 +1,44 @@
-# CSH-Informatik-
-Git Repo of all IT students
+# CSH-Informatik — Auto Data WebApp
 
-<span style="color:#ff0000;">Tim</span> - HTMl  
-<span style="color:#1f77b4;">Laurin</span> - Routes  
-<span style="color:#ff69b4;">Jana</span> - Backend
+Shared repo for the IT class. Local dashboard that reads car bus data (or simulates it) on your laptop — no cloud.
 
-**Color legend**
+## Team
 
-- <span style="color:#ff0000;">Tim</span>: Client / HTML / Frontend
-- <span style="color:#1f77b4;">Laurin</span>: Routes / Integration
-- <span style="color:#ff69b4;">Jana</span>: Backend / Storage / CLI
+| Person | Area | Folder |
+|--------|------|--------|
+| **Tim** | Client / UI | [`client/`](client/) |
+| **Laurin** | Routes / API wiring | [`client/app.js`](client/app.js) + [`docs/routes/`](docs/routes/) |
+| **Jana** | Backend / CLI / data | [`backend/`](backend/), [`cli/`](cli/), [`data/`](data/) |
 
-# CSH-Informatik – Auto Data WebApp
+## Quick start
 
-To-Do's
-<span style="color:#ff0000;">Tim</span>
-- [ ] Test
-<span style="color:#ff69b4;">Jana</span>
-- [x] Car Synthesis Tool (Emulation)
-- [x] Secure JSON Interface
-- [ ] Test
-<span style="color:#1f77b4;">Laurin</span>
-- [ ] Test
+1. `cd backend && npm install && cd ..`
+2. `npm start` or `node cli/adm.js`
+3. Browser opens **http://localhost:4000** (API key: `x-api-key: csh-secure-v1`)
 
-## 🚀 Quick Start
+Details: [`docs/getting-started.md`](docs/getting-started.md)
 
-From the project root:
+## Repository map
 
-```bash
-cd backend && npm install && cd ..
-node cli/adm.js
+```
+CSH-Informatik-/
+├── README.md          ← you are here (only doc at repo root)
+├── client/            Tim — dashboard UI
+├── backend/           Jana — HTTP API + bus adapters
+├── cli/               Jana — launcher script
+├── data/              Jana — replay sample files
+└── docs/              Specs, tasks, API contract
 ```
 
-Or use npm:
+| Folder | README |
+|--------|--------|
+| Client (Tim) | [`client/README.md`](client/README.md) |
+| Backend (Jana) | [`backend/README.md`](backend/README.md) |
+| CLI (Jana) | [`cli/README.md`](cli/README.md) |
+| Routes (Laurin) | [`docs/routes/README.md`](docs/routes/README.md) |
+| All documentation | [`docs/README.md`](docs/README.md) |
 
-```bash
-npm start
-```
+## Git workflow (class test)
 
-This starts the TypeScript backend on **http://localhost:4000** and opens the dashboard in your browser. All API calls require header `x-api-key: csh-secure-v1`.
-
-Optional environment variables:
-
-- `BUS_PROFILE` — `simulation` (default), `hardware_elm327`, or `replay_file`
-- `SERIAL_PATH` — serial device for ELM327 cables (e.g. `/dev/tty.usbserial-*`)
-- `REPLAY_FILE` — path to a JSON/JSONL recording when using `replay_file`
-
-See [explain.md](explain.md) for a plain-language overview.
-
----
-
-## Navigation
-
-- [Spec: Client](Spec/Client/readme.md)
-- [Spec: Routes](Spec/Routes/readme.md)
-- [Spec: Backend](Spec/Backend/server.md)
-- [Spec: CLI](Features/cli.md)
-- [Project preparation](Spec/project-preparation.md)
-- [Tasks overview](Tasks/overview.md)
-
-## Product:
-
-* Webapp to read and visualize car data
-* Physical connection from laptop to car Bus Interface (e.g. OBD / CAN)
-* Local-only application (no cloud, no external servers)
-* CLI with command to launch the local webapp
-* Configurable polling rate (control how often data is read)
-* Focus on predictable behavior instead of random / unstructured coding
-* Open Source project maintained by IT students
-
-## Goal:
-
-* Read raw car bus data
-* Decode and display relevant auto information
-* Store and replay data for debugging and analysis
-* Avoid “vibe coding” by defining clear product scenarios and outcomes
-
-## Components
-
-### [Client](/Spec/Client/readme.md)
-
-* Dashboard webapp (browser-based)
-* Real-time data visualization
-* Service to request permission and connect to serial port
-* Displays:
-
-  * Live car data
-  * Connection status
-  * Read frequency
-* Works offline after startup
-
-### Routes
-
-* Dashboard
-
-  * Live data view
-     * fuel level in L
-     * motor rpm 
-     * motor temp
-  * Status of Bus connection
-
-* View previous recordings
-
-  * Select stored sessions
-  * Inspect raw and processed data
-
-* Export data
-
-  * Download data as file (e.g. JSON / CSV)
-
-* Settings
-
-  * Configure read interval
-  * Select Bus interface
-  * Enable/disable logging
-
-* Replay raw BUS data
-
-  * Works without a connected car
-  * Used for testing and debugging
-
-### Backend
-
-* Queue manager for streaming Bus data
-
-  * Ensures stable data flow
-  * Prevents data loss at high read rates
-
-* Data store
-
-  * Stores raw Bus data
-  * Stores decoded values
-  * Used for debugging and replay
-
-* Handles:
-
-  * Serial communication
-  * Data validation
-  * Rate limiting
-
-### CLI
-
-* CLI command to launch local webapp
-* Starts backend and frontend together
-* Allows basic configuration via flags
-* Example use case:
-
-  * Plug in car
-  * Run CLI command
-  * Open dashboard in browser
-
-## Product Scenarios
-
-* User connects laptop to car → starts CLI → sees live data
-* User records a drive → saves data → exports it
-* User replays recorded Bus data without car connected
-* User changes read frequency to reduce load
-
-## Predictable Outcomes
-
-* Stable data reading
-* Reproducible results
-* Clear separation of components
-* Easier debugging and testing
-
-## Why Spec Kit fits
-
-* Encourages defining scenarios before coding
-* Reduces unstructured “vibe coding”
-* Improves code quality and team collaboration
-* Makes behavior and outputs predictable
-
-## Repository
-
-* One shared Git repository
-* Used by all IT students
-* Open Source
-* GitHub Stars show interest and project relevance
-* License defines how the code can be used and shared
+Use **GitHub Desktop** + **github.com** for pull → branch → commit → push → merge PR.  
+Ask your AI: *"I'm [Tim/Laurin/Jana] — help me with the team sync workflow."*

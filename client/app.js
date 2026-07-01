@@ -160,6 +160,15 @@ const state = {
     intake_air_temp: [],
     maxSamples: 48,
   },
+  fieldStreamLogs: {
+    rpm: [],
+    motor_temp: [],
+    fuel_liters: [],
+    speed_kmh: [],
+    battery_voltage: [],
+    throttle_percent: [],
+    maxLines: 5,
+  },
   replay: {
     selectedRecordingId: null,
     playing: false,
@@ -397,6 +406,21 @@ function renderBusStreamText(live) {
   `;
 }
 
+function renderFieldLiveFlow(field) {
+  const lines = state.fieldStreamLogs[field.busKey] || [];
+  if (!lines.length) {
+    return `<div class="field-live-flow field-live-flow--empty" aria-hidden="true"><span class="field-live-flow-line">…</span></div>`;
+  }
+  return `<div class="field-live-flow" aria-label="Recent ${escapeHtml(field.busKey)} lines">${lines
+    .map(
+      (line, index) =>
+        `<div class="field-live-flow-line${
+          index === lines.length - 1 ? " field-live-flow-line--latest" : ""
+        }">${escapeHtml(line)}</div>`
+    )
+    .join("")}</div>`;
+}
+
 function renderKpiCard(field, options = {}) {
   const {
     value,
@@ -419,8 +443,10 @@ function renderKpiCard(field, options = {}) {
         </div>
         ${renderTinySparkline(samples, field.min, field.max)}
       </div>
-      <p class="kpi-value">${formatKpiValue(field, value)}</p>
-      <p class="bus-raw-text">${escapeHtml(field.busKey)}=${escapeHtml(formatRawBusValue(field, value))}</p>
+      <div class="kpi-body">
+        <p class="kpi-value">${formatKpiValue(field, value)}</p>
+        ${renderFieldLiveFlow(field)}
+      </div>
       ${gaugeHtml}
       <p class="subtle">${escapeHtml(field.unit)}${subtleSuffix}</p>
       ${extraHtml}
@@ -593,7 +619,6 @@ function renderDashboardView() {
 
   return `
     ${renderSourcePanel(source)}
-    ${renderBusStreamText(live)}
     ${renderLiveKpiCards(live, source)}
     <article class="card">
       <p class="kpi-label">Status</p>
@@ -886,7 +911,23 @@ async function refreshLiveData() {
   } finally {
     state.lastLiveUpdate = Date.now();
     pushLiveHistory(state.liveData);
+    pushFieldStreamLogs(state.liveData);
     render();
+  }
+}
+
+function pushFieldStreamLogs(liveData) {
+  if (!liveData || typeof liveData !== "object") return;
+  const max = state.fieldStreamLogs.maxLines;
+  for (const field of BUS_KPI_FIELDS) {
+    const line = `${field.busKey}=${formatRawBusValue(field, liveData[field.liveKey])}`;
+    if (!state.fieldStreamLogs[field.busKey]) {
+      state.fieldStreamLogs[field.busKey] = [];
+    }
+    state.fieldStreamLogs[field.busKey].push(line);
+    while (state.fieldStreamLogs[field.busKey].length > max) {
+      state.fieldStreamLogs[field.busKey].shift();
+    }
   }
 }
 
