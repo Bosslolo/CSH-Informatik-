@@ -1,0 +1,15 @@
+{"rpm":820,"speed_kmh":0,"fuel_liters":45.5,"motor_temp":22,"gear":1,"battery_voltage":12.4,"throttle_percent":0,"intake_air_temp":18}
+{"rpm":835,"speed_kmh":0,"fuel_liters":45.5,"motor_temp":24,"gear":1,"battery_voltage":12.41,"throttle_percent":2,"intake_air_temp":19}
+{"rpm":1100,"speed_kmh":12,"fuel_liters":45.4,"motor_temp":28,"gear":1,"battery_voltage":12.42,"throttle_percent":15,"intake_air_temp":20}
+{"rpm":1450,"speed_kmh":28,"fuel_liters":45.4,"motor_temp":35,"gear":2,"battery_voltage":12.43,"throttle_percent":28,"intake_air_temp":22}
+{"rpm":1800,"speed_kmh":45,"fuel_liters":45.3,"motor_temp":48,"gear":2,"battery_voltage":12.44,"throttle_percent":35,"intake_air_temp":24}
+{"rpm":2200,"speed_kmh":62,"fuel_liters":45.3,"motor_temp":58,"gear":3,"battery_voltage":12.45,"throttle_percent":42,"intake_air_temp":26}
+{"rpm":2500,"speed_kmh":78,"fuel_liters":45.2,"motor_temp":68,"gear":3,"battery_voltage":12.46,"throttle_percent":48,"intake_air_temp":28}
+{"rpm":2100,"speed_kmh":72,"fuel_liters":45.2,"motor_temp":72,"gear":3,"battery_voltage":12.45,"throttle_percent":38,"intake_air_temp":29}
+{"rpm":1750,"speed_kmh":55,"fuel_liters":45.1,"motor_temp":75,"gear":2,"battery_voltage":12.44,"throttle_percent":30,"intake_air_temp":30}
+{"rpm":1400,"speed_kmh":38,"fuel_liters":45.1,"motor_temp":78,"gear":2,"battery_voltage":12.43,"throttle_percent":22,"intake_air_temp":31}
+{"rpm":1200,"speed_kmh":25,"fuel_liters":45.0,"motor_temp":80,"gear":1,"battery_voltage":12.42,"throttle_percent":18,"intake_air_temp":32}
+{"rpm":950,"speed_kmh":10,"fuel_liters":45.0,"motor_temp":82,"gear":1,"battery_voltage":12.41,"throttle_percent":8,"intake_air_temp":33}
+{"rpm":820,"speed_kmh":0,"fuel_liters":44.9,"motor_temp":84,"gear":1,"battery_voltage":12.4,"throttle_percent":0,"intake_air_temp":34}
+{"rpm":800,"speed_kmh":0,"fuel_liters":44.9,"motor_temp":85,"gear":1,"battery_voltage":12.39,"throttle_percent":0,"intake_air_temp":34}
+{"rpm":810,"speed_kmh":0,"fuel_liters":44.9,"motor_temp":86,"gear":1,"battery_voltage":12.39,"throttle_percent":0,"intake_air_temp":33}
