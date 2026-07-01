@@ -394,14 +394,52 @@ function resolveConnectionLabel(live) {
   return "Disconnected";
 }
 
-function renderBusStreamText(live) {
-  const parts = BUS_KPI_FIELDS.map(
+function renderBusPrettyPrint(live) {
+  const rows = BUS_KPI_FIELDS.map((field) => {
+    const value = live[field.liveKey];
+    const display = formatKpiValue(field, value);
+    const raw = formatRawBusValue(field, value);
+    return `
+      <div class="bus-pretty-row">
+        <span class="bus-pretty-label">${escapeHtml(field.label)}</span>
+        <code class="bus-pretty-key">${escapeHtml(field.busKey)}</code>
+        <span class="bus-pretty-value">${escapeHtml(display)}</span>
+        <span class="bus-pretty-unit">${escapeHtml(field.unit)}</span>
+        <span class="bus-pretty-raw" title="Raw bus value">${escapeHtml(raw)}</span>
+      </div>
+    `;
+  }).join("");
+
+  const streamParts = BUS_KPI_FIELDS.map(
     (field) => `${field.busKey}=${formatRawBusValue(field, live[field.liveKey])}`
   );
+  const timestamp = live.timestamp
+    ? formatDateTime(live.timestamp)
+    : formatDateTime(state.lastLiveUpdate);
+
   return `
-    <article class="card bus-stream-card">
-      <p class="kpi-label">Live bus stream</p>
-      <code class="bus-stream-text">${escapeHtml(parts.join(" \u00b7 "))}</code>
+    <article class="card bus-pretty-card">
+      <div class="bus-pretty-header">
+        <div>
+          <p class="kpi-label">Bus data</p>
+          <p class="bus-pretty-subtitle">Pretty-printed live frame</p>
+        </div>
+        <span class="bus-pretty-live-dot" aria-hidden="true"></span>
+      </div>
+      <div class="bus-pretty-grid" role="table" aria-label="Live bus data">
+        <div class="bus-pretty-row bus-pretty-row--head" role="row">
+          <span role="columnheader">Signal</span>
+          <span role="columnheader">Key</span>
+          <span role="columnheader">Value</span>
+          <span role="columnheader">Unit</span>
+          <span role="columnheader">Raw</span>
+        </div>
+        ${rows}
+      </div>
+      <div class="bus-pretty-footer">
+        <code class="bus-pretty-stream">${escapeHtml(streamParts.join(" \u00b7 "))}</code>
+        <span class="bus-pretty-timestamp">Updated ${escapeHtml(timestamp)}</span>
+      </div>
     </article>
   `;
 }
@@ -620,6 +658,7 @@ function renderDashboardView() {
   return `
     ${renderSourcePanel(source)}
     ${renderLiveKpiCards(live, source)}
+    ${renderBusPrettyPrint(live)}
     <article class="card">
       <p class="kpi-label">Status</p>
       <p class="kpi-value">${escapeHtml(connectionLabel)}</p>
