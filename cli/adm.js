@@ -47,3 +47,4 @@ process.on('SIGINT', () => {
   backend.kill();
   process.exit();
 });
+env: { ...process.env, CSH_API_KEY: API_KEY },
