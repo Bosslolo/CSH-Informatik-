@@ -95,7 +95,8 @@ bin/
 ################################################################################
 # Databases / data dumps / recordings (likely for your “store & replay”)
 ################################################################################
-data/
+data/*
+!data/README.md
 recordings/
 *.sqlite
 *.sqlite3

@@ -47,7 +47,7 @@ The dashboard does this automatically. This stops random programs on your PC fro
 | `client/` | Browser UI (HTML, CSS, JavaScript) |
 | `backend/src/` | Fake car + real cable support + HTTP API |
 | `cli/adm.js` | Starts backend and opens the dashboard |
-| `explain.md` | This file |
+| `docs/getting-started.md` | This guide |
 
 ---
 
@@ -102,4 +102,4 @@ The web client should **not** need changes if the new adapter still fills the sa
 
 - **Dashboard shows “simulation” but you wanted hardware** — check serial path, cable drivers, and that you clicked Apply in Settings.
 - **ELM327 errors in the banner** — `last_error` from the backend; often wrong port or car ignition off.
-- **Old `backend/server.js`** — deprecated; use `cd backend && npm run dev` only.
+- **Old `backend/server.js`** — removed; use `cd backend && npm run dev` only.

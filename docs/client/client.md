@@ -45,7 +45,7 @@ The client should (owner: <span style="color:#ff0000;">Tim</span>):
 #### Navigation
 
 - [Home](../README.md)
-- [Client spec](../Spec/Client/readme.md)
+- [Client spec](README.md)
 - [Tasks overview](overview.md)
 - [Routes tasks](routes.md)
 - [Backend tasks](backend.md)

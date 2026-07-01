@@ -84,5 +84,5 @@ High-level plan for backend services: bus adapter, queue manager, API, and stora
 - [Home](../../README.md)
 - [Client spec](../Client/readme.md)
 - [Routes spec](../Routes/readme.md)
-- [CLI spec](../../Features/cli.md)
-- [Tasks: backend](../../Tasks/backend.md)
+- [CLI spec](../cli/spec.md)
+- [Tasks: backend](../tasks/overview.md)

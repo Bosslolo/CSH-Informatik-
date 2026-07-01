@@ -105,5 +105,5 @@ POST accepts `interface`: `simulator` | `hardware` (mapped to profiles).
 
 1. New sensors: add to `carState.ts` and `synthesis.ts` first; extend ELM327 PID map for hardware.
 2. New cables: new `BusAdapter` in `backend/src/adapters/`, register in `registry.ts`.
-3. Update this contract and `Spec/api-contract.json` after API changes.
+3. Update this contract and `docs/api-contract.json` after API changes.
 4. Protect all `/api/*` routes with the API key middleware.
