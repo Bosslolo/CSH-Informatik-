@@ -1,0 +1,12 @@
+[
+  {"rpm": 800, "speed": 0, "temp": 20, "fuel": 45.5, "gear": 1},
+  {"rpm": 850, "speed": 0, "temp": 21, "fuel": 45.49, "gear": 1},
+  {"rpm": 1200, "speed": 10, "temp": 25, "fuel": 45.48, "gear": 1},
+  {"rpm": 1800, "speed": 30, "temp": 30, "fuel": 45.45, "gear": 2},
+  {"rpm": 2200, "speed": 50, "temp": 40, "fuel": 45.40, "gear": 3},
+  {"rpm": 2500, "speed": 70, "temp": 55, "fuel": 45.30, "gear": 4},
+  {"rpm": 2400, "speed": 90, "temp": 70, "fuel": 45.20, "gear": 5},
+  {"rpm": 2300, "speed": 110, "temp": 85, "fuel": 45.10, "gear": 6},
+  {"rpm": 2250, "speed": 120, "temp": 90, "fuel": 45.00, "gear": 6},
+  {"rpm": 2200, "speed": 120, "temp": 91, "fuel": 44.95, "gear": 6}
+]
