@@ -12,11 +12,14 @@ Shared repo for the IT class. Local dashboard that reads car bus data (or simula
 
 ## Quick start
 
-1. `cd backend && npm install && cd ..`
-2. `npm start` or `node cli/adm.js`
-3. Browser opens **http://localhost:4000** (API key: `x-api-key: csh-secure-v1`)
+**One click (macOS):** double-click [`Start CSH Auto Data.command`](Start%20CSH%20Auto%20Data.command) — installs backend deps on first run, starts the server, opens **http://localhost:4000**.
 
-Details: [`docs/getting-started.md`](docs/getting-started.md)
+Or from the terminal:
+
+```bash
+cd backend && npm install && cd ..
+npm start
+```
 
 ## Repository map
 

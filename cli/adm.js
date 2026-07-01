@@ -11,6 +11,7 @@ const backend = spawn('npm', ['run', 'dev'], {
   cwd: path.join(__dirname, '../backend'),
   shell: true,
   stdio: 'inherit',
+  env: { ...process.env, CSH_API_KEY: API_KEY },
 });
 
 console.log('Waiting for backend to start...');
