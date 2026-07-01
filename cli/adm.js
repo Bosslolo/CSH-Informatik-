@@ -5,6 +5,8 @@ const http = require('http');
 
 console.log('\n🚗 CSH-Auto-Data-Machine (ADM) Starting...');
 
+const API_KEY = process.env.CSH_API_KEY || 'csh-secure-v1';
+
 const backend = spawn('npm', ['run', 'dev'], {
   cwd: path.join(__dirname, '../backend'),
   shell: true,
@@ -16,7 +18,7 @@ console.log('Waiting for backend to start...');
 function checkStatus() {
   http
     .get('http://localhost:4000/api/status', {
-      headers: { 'x-api-key': 'csh-secure-v1' },
+      headers: { 'x-api-key': API_KEY },
     }, (res) => {
       if (res.statusCode === 200) {
         console.log('\n✅ BACKEND READY');
