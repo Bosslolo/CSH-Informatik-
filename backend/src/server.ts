@@ -82,6 +82,12 @@ app.get('/api/session', (_req, res) => {
   res.json(session.getConfig());
 });
 
+app.post('/api/simulation/controls', (req, res) => {
+  const body = req.body || {};
+  synthesis.setControls(Boolean(body.gas), Boolean(body.brake));
+  res.json({ ok: true, gas: Boolean(body.gas), brake: Boolean(body.brake) });
+});
+
 app.post('/api/session', async (req, res) => {
   try {
     const body = req.body || {};

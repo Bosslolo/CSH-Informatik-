@@ -42,9 +42,8 @@ function checkStatus() {
 
 checkStatus();
 
-process.on('SIGINT', () => {
-  console.log('\n\n🛑 Shutting down gracefully...');
+process.on("SIGINT", () => {
+  console.log("\n\n🛑 Shutting down gracefully...");
   backend.kill();
   process.exit();
 });
-env: { ...process.env, CSH_API_KEY: API_KEY },

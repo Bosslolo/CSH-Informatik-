@@ -12,9 +12,31 @@ Shared repo for the IT class. Local dashboard that reads car bus data (or simula
 
 ## Quick start
 
-**One click (macOS):** open [`package/`](package/) → double-click **`Start CSH Auto Data.command`**.
+**One click (macOS):** double-click **`Start CSH Auto Data.command`** in the repo root (or in [`package/`](package/)).
 
 Or terminal:
+
+```bash
+node start-dashboard.js
+```
+
+The launcher starts **testing mode** (simulator) by default, or **real mode** if an ELM327 OBD cable is detected and connects successfully.
+
+## Dashboard controls (testing mode)
+
+On the live dashboard (`#/`), when the bus is running in simulation:
+
+| Control | Action |
+|---------|--------|
+| **km/h / mph** toggle (under Speed) | Switch speed display between metric and imperial |
+| **W** | Gas — accelerate the simulated vehicle |
+| **S** | Brake — slow down; brake pressure shows on the Throttle card (red gauge) |
+
+Speed can exceed 180 km/h in simulation. Display is converted for imperial; raw bus data stays in km/h.
+
+Unit preference is also available under **Settings → Speed units** and is saved in the browser.
+
+## Quick start (package folder)
 
 ```bash
 cd package && npm start
@@ -25,6 +47,8 @@ cd package && npm start
 ```
 CSH-Informatik-/
 ├── README.md       ← you are here
+├── Start CSH Auto Data.command  ← root launcher (testing or real mode)
+├── start-dashboard.js             ← launcher script
 ├── package/        ← one-click launcher (first package)
 ├── client/         Tim — dashboard UI
 ├── backend/        Jana — HTTP API + bus adapters

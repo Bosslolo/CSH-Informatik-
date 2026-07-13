@@ -102,7 +102,7 @@ const BUS_KPI_FIELDS = [
     liveKey: "speed_kmh",
     replayKey: "speed_kmh",
     min: 0,
-    max: 180,
+    max: 320,
     format: "number",
     extraSubtle: (live) => ` \u00b7 Gear ${formatNumber(live.gear)}`,
   },
@@ -133,6 +133,20 @@ const BUS_KPI_FIELDS = [
 
 const KM_TO_MI = 0.621371192;
 const SPEED_FIELD_KEY = "speed_kmh";
+const DRIVE_TICK_MS = 80;
+const DRIVE_POLL_ACTIVE_MS = 120;
+const SPEED_MAX_KMH = 320;
+const DRIVE_PHYSICS = {
+  gasBase: 0.62,
+  gasFalloff: 280,
+  brake: 0.85,
+  coast: 0.045,
+  throttleGas: 5,
+  throttleBrake: 10,
+  brakeBuild: 11,
+  brakeRelease: 9,
+  throttleCoast: 1.2,
+};
 
 const state = {
   route: { path: "/", params: {} },
@@ -161,6 +175,7 @@ const state = {
     speed_kmh: [],
     battery_voltage: [],
     throttle_percent: [],
+    brake_percent: [],
     intake_air_temp: [],
     maxSamples: 48,
   },
@@ -184,6 +199,11 @@ const state = {
     livePollingId: null,
     recordingsPollingId: null,
     activeLiveIntervalMs: null,
+    interactiveDriveId: null,
+  },
+  simControls: {
+    gas: false,
+    brake: false,
   },
 };
 
@@ -211,6 +231,9 @@ function loadState(key) {
 window.addEventListener("hashchange", onRouteChange);
 viewEl.addEventListener("click", onViewClick);
 viewEl.addEventListener("submit", onViewSubmit);
+window.addEventListener("keydown", onDriveKeyDown);
+window.addEventListener("keyup", onDriveKeyUp);
+window.addEventListener("blur", onDriveWindowBlur);
 
 init();
 
@@ -437,7 +460,7 @@ function renderSpeedUnitToggle() {
   return `
     <button
       type="button"
-      class="unit-toggle${isImperial ? " unit-toggle--imperial" : " unit-toggle--metric"}"
+      class="unit-toggle"
       data-action="toggle-speed-units"
       title="Switch speed units"
       aria-label="Switch speed units"
@@ -447,6 +470,272 @@ function renderSpeedUnitToggle() {
       <span class="${isImperial ? "unit-toggle-active" : ""}">mph</span>
     </button>
   `;
+}
+
+function isSimulationDriveEnabled() {
+  if (state.route.path !== "/") return false;
+  if (state.api.backendReachable === false) return true;
+  const live = state.liveData;
+  if (!live) return true;
+  const profile = String(live.profile || live.mode || "");
+  return profile === "simulation" || profile === "simulator";
+}
+
+function renderSpeedControlsRow() {
+  const gasActive = state.simControls.gas;
+  const brakeActive = state.simControls.brake;
+  const showDrive = isSimulationDriveEnabled();
+
+  return `
+    <div class="speed-controls-row">
+      ${renderSpeedUnitToggle()}
+      ${
+        showDrive
+          ? `
+        <div class="drive-keys" aria-label="Simulation drive controls">
+          <span class="drive-key-wrap">
+            <kbd class="drive-key${gasActive ? " drive-key--active" : ""}">W</kbd>
+            <span class="drive-key-label">Gas</span>
+          </span>
+          <span class="drive-key-wrap">
+            <kbd class="drive-key${brakeActive ? " drive-key--active" : ""}">S</kbd>
+            <span class="drive-key-label">Brake</span>
+          </span>
+        </div>
+      `
+          : ""
+      }
+    </div>
+  `;
+}
+
+function onDriveKeyDown(event) {
+  if (!isSimulationDriveEnabled()) return;
+  if (isEditableTarget(event.target)) return;
+
+  const key = event.key.toLowerCase();
+  if (key !== "w" && key !== "s") return;
+
+  event.preventDefault();
+
+  if (key === "s") {
+    state.simControls.brake = true;
+    state.simControls.gas = false;
+    syncSimulationControls();
+    return;
+  }
+
+  if (key === "w") {
+    if (state.simControls.brake) return;
+    if (state.simControls.gas) return;
+    state.simControls.gas = true;
+    syncSimulationControls();
+  }
+}
+
+function onDriveKeyUp(event) {
+  if (!isSimulationDriveEnabled()) return;
+  if (isEditableTarget(event.target)) return;
+
+  const key = event.key.toLowerCase();
+  if (key !== "w" && key !== "s") return;
+
+  let changed = false;
+  if (key === "w" && state.simControls.gas) {
+    state.simControls.gas = false;
+    changed = true;
+  }
+  if (key === "s" && state.simControls.brake) {
+    state.simControls.brake = false;
+    changed = true;
+  }
+  if (changed) {
+    void postSimulationControls();
+    stopInteractiveDriveLoop();
+    ensureLivePolling(resolvePollInterval());
+    render();
+  }
+}
+
+function onDriveWindowBlur() {
+  if (!state.simControls.gas && !state.simControls.brake) return;
+  state.simControls.gas = false;
+  state.simControls.brake = false;
+  syncSimulationControls();
+}
+
+function isEditableTarget(target) {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable;
+}
+
+function resolvePollInterval() {
+  if (
+    isSimulationDriveEnabled() &&
+    (state.simControls.gas || state.simControls.brake)
+  ) {
+    return DRIVE_POLL_ACTIVE_MS;
+  }
+  return state.settings.pollIntervalMs;
+}
+
+function gasSpeedDelta(speedKmh) {
+  const headroom = Math.max(0, 1 - speedKmh / DRIVE_PHYSICS.gasFalloff);
+  return DRIVE_PHYSICS.gasBase * Math.max(0.22, headroom);
+}
+
+function applyDrivePhysics(speedKmh, throttlePercent, brakePercent, gas, brake) {
+  let speed = Number(speedKmh) || 0;
+  let throttle = Number(throttlePercent) || 0;
+  let brakePct = Number(brakePercent) || 0;
+
+  if (gas) {
+    speed = clamp(speed + gasSpeedDelta(speed), 0, SPEED_MAX_KMH);
+    throttle = clamp(throttle + DRIVE_PHYSICS.throttleGas, 0, 100);
+    brakePct = clamp(brakePct - DRIVE_PHYSICS.brakeRelease, 0, 100);
+  } else if (brake) {
+    speed = clamp(speed - DRIVE_PHYSICS.brake, 0, SPEED_MAX_KMH);
+    brakePct = clamp(brakePct + DRIVE_PHYSICS.brakeBuild, 0, 100);
+    throttle = clamp(throttle - DRIVE_PHYSICS.throttleBrake, 0, 100);
+  } else {
+    brakePct = clamp(brakePct - DRIVE_PHYSICS.brakeRelease, 0, 100);
+    if (speed > 0) {
+      speed = clamp(speed - DRIVE_PHYSICS.coast, 0, SPEED_MAX_KMH);
+      throttle = clamp(throttle - DRIVE_PHYSICS.throttleCoast, 0, 100);
+    } else {
+      throttle = clamp(throttle - 1.5, 0, 100);
+    }
+  }
+
+  const gear =
+    speed > 0 ? clamp(Math.round(speed / 42) || 1, 1, 8) : 1;
+  const rpm =
+    speed === 0
+      ? clamp(Math.round(800 + randomInRange(-30, 30)), 700, 900)
+      : clamp(
+          Math.round(1000 + speed * 28 + throttle * 8 - brakePct * 4),
+          900,
+          6500
+        );
+
+  return { speed, throttle, brake_percent: brakePct, gear, rpm };
+}
+
+function syncSimulationControls() {
+  void postSimulationControls();
+  ensureInteractiveDriveLoop();
+  ensureLivePolling(resolvePollInterval());
+  render();
+}
+
+async function postSimulationControls() {
+  if (state.api.backendReachable === false) return;
+  try {
+    await fetchJson("/api/simulation/controls", 400, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gas: state.simControls.gas,
+        brake: state.simControls.brake,
+      }),
+    });
+  } catch (_) {
+    // backend may be offline; interactive loop handles it
+  }
+}
+
+function ensureInteractiveDriveLoop() {
+  const active = state.simControls.gas || state.simControls.brake;
+  if (!active) {
+    stopInteractiveDriveLoop();
+    ensureLivePolling(resolvePollInterval());
+    return;
+  }
+  if (state.timers.interactiveDriveId) return;
+
+  state.timers.interactiveDriveId = setInterval(() => {
+    if (!state.simControls.gas && !state.simControls.brake) {
+      stopInteractiveDriveLoop();
+      ensureLivePolling(resolvePollInterval());
+      return;
+    }
+    tickInteractiveDrive();
+  }, DRIVE_TICK_MS);
+}
+
+function stopInteractiveDriveLoop() {
+  if (!state.timers.interactiveDriveId) return;
+  clearInterval(state.timers.interactiveDriveId);
+  state.timers.interactiveDriveId = null;
+}
+
+function tickInteractiveDrive() {
+  if (!state.liveData) {
+    state.liveData = generateSimulatedLiveData(null);
+  }
+  const next = applyLocalDriveToLiveData(state.liveData);
+  state.liveData = {
+    ...state.liveData,
+    ...next,
+  };
+  state.lastLiveUpdate = Date.now();
+  pushLiveHistory(state.liveData);
+  pushFieldStreamLogs(state.liveData);
+  render();
+}
+
+function applyLocalDriveToLiveData(previousLiveData) {
+  const prev = previousLiveData || generateSimulatedLiveData(null);
+  const driven = applyDrivePhysics(
+    prev.speed_kmh,
+    prev.throttle_percent,
+    prev.brake_percent,
+    state.simControls.gas,
+    state.simControls.brake
+  );
+
+  return {
+    speed_kmh: driven.speed,
+    throttle_percent: driven.throttle,
+    brake_percent: driven.brake_percent,
+    gear: driven.gear,
+    rpm: driven.rpm,
+  };
+}
+
+function resolvePedalDisplay(field, live, value) {
+  if (field.busKey !== "throttle_percent" || !live) {
+    return {
+      label: field.label,
+      value,
+      unit: field.unit,
+      gaugeMode: "throttle",
+      suffix: field.suffix || "",
+    };
+  }
+
+  const brakePercent = Number(live.brake_percent) || 0;
+  const isBraking =
+    state.simControls.brake || brakePercent > Number(value) + 2;
+
+  if (isBraking && brakePercent > 0) {
+    return {
+      label: "Brake",
+      value: brakePercent,
+      unit: "%",
+      gaugeMode: "brake",
+      suffix: "%",
+    };
+  }
+
+  return {
+    label: field.label,
+    value,
+    unit: field.unit,
+    gaugeMode: "throttle",
+    suffix: field.suffix || "",
+  };
 }
 
 function formatKpiValue(field, value) {
@@ -514,38 +803,54 @@ function renderKpiCard(field, options = {}) {
     syntheticChip = "",
     extraHtml = "",
     subtleSuffix = "",
+    live = null,
   } = options;
   const bounds = getFieldDisplayBounds(field);
-  const displaySamples = convertSamplesForDisplay(field, samples);
+  const pedal = resolvePedalDisplay(field, live, value);
+  const historyField =
+    field.busKey === "throttle_percent" && pedal.gaugeMode === "brake"
+      ? { ...field, busKey: "brake_percent", liveKey: "brake_percent" }
+      : field;
+  const displaySamples = convertSamplesForDisplay(
+    field,
+    historyField.busKey === "brake_percent"
+      ? (state.liveHistory.brake_percent || samples)
+      : samples
+  );
   const displayValue =
     field.busKey === SPEED_FIELD_KEY
       ? convertSpeedKmh(value, state.settings.unitSystem).value
-      : value;
+      : pedal.value;
   const gaugeHtml =
     field.showGauge && Number.isFinite(Number(displayValue))
-      ? renderGaugeBar(displayValue, bounds.min, bounds.max)
+      ? renderGaugeBar(displayValue, bounds.min, bounds.max, pedal.gaugeMode)
       : "";
-  const unitToggle =
-    field.busKey === SPEED_FIELD_KEY ? renderSpeedUnitToggle() : "";
+  const speedControlsRow =
+    field.busKey === SPEED_FIELD_KEY ? renderSpeedControlsRow() : "";
   return `
-    <article class="card kpi-card">
+    <article class="card kpi-card${syntheticChip ? " kpi-card--synthetic" : ""}">
       ${syntheticChip}
       <div class="kpi-header">
         <div class="kpi-header-text">
-          <p class="kpi-label">${escapeHtml(field.label)}</p>
-          <code class="bus-field-key">${escapeHtml(field.busKey)}</code>
-        </div>
-        <div class="kpi-header-actions">
-          ${unitToggle}
-          ${renderTinySparkline(displaySamples, bounds.min, bounds.max)}
+          <p class="kpi-label">${escapeHtml(pedal.label)}</p>
+          <code class="bus-field-key">${escapeHtml(
+            pedal.gaugeMode === "brake" ? "brake_percent" : field.busKey
+          )}</code>
         </div>
       </div>
+      <div class="kpi-sparkline-row">
+        ${renderTinySparkline(displaySamples, bounds.min, bounds.max)}
+      </div>
       <div class="kpi-body">
-        <p class="kpi-value">${formatKpiValue(field, value)}</p>
+        <p class="kpi-value">${formatKpiValue(
+          { ...field, suffix: pedal.suffix },
+          pedal.value
+        )}</p>
+        ${speedControlsRow}
         ${renderFieldLiveFlow(field)}
       </div>
       ${gaugeHtml}
-      <p class="subtle">${escapeHtml(getDisplayUnit(field))}${subtleSuffix}</p>
+      <p class="subtle">${escapeHtml(pedal.unit)}${subtleSuffix}</p>
       ${extraHtml}
     </article>
   `;
@@ -567,6 +872,7 @@ function renderLiveKpiCards(live, source) {
       samples,
       syntheticChip,
       subtleSuffix,
+      live,
     });
   });
   const rows = [];
@@ -1011,7 +1317,7 @@ async function refreshLiveData() {
       live.read_interval_ms || state.settings.pollIntervalMs
     );
     state.settings.interface = live.mode || state.settings.interface;
-    ensureLivePolling(state.settings.pollIntervalMs);
+    ensureLivePolling(resolvePollInterval());
   } catch (_error) {
     state.api.liveFailures += 1;
     state.api.backendReachable = false;
@@ -1047,7 +1353,16 @@ function pushLiveHistory(liveData) {
   if (!liveData || typeof liveData !== "object") return;
   const max = state.liveHistory.maxSamples;
   for (const field of BUS_KPI_FIELDS) {
-    const raw = liveData[field.liveKey];
+    let raw = liveData[field.liveKey];
+    if (field.busKey === "throttle_percent") {
+      const brake = Number(liveData.brake_percent);
+      if (
+        Number.isFinite(brake) &&
+        (state.simControls.brake || brake > Number(raw) + 2)
+      ) {
+        raw = brake;
+      }
+    }
     const num = Number(raw);
     if (!Number.isFinite(num)) continue;
     if (!state.liveHistory[field.busKey]) {
@@ -1056,6 +1371,16 @@ function pushLiveHistory(liveData) {
     state.liveHistory[field.busKey].push(num);
     while (state.liveHistory[field.busKey].length > max) {
       state.liveHistory[field.busKey].shift();
+    }
+  }
+  const brakeNum = Number(liveData.brake_percent);
+  if (Number.isFinite(brakeNum)) {
+    if (!state.liveHistory.brake_percent) {
+      state.liveHistory.brake_percent = [];
+    }
+    state.liveHistory.brake_percent.push(brakeNum);
+    while (state.liveHistory.brake_percent.length > max) {
+      state.liveHistory.brake_percent.shift();
     }
   }
 }
@@ -1094,12 +1419,14 @@ function renderSparkline(samples, min, max) {
   return `<svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${points}" /></svg>`;
 }
 
-function renderGaugeBar(value, min, max) {
+function renderGaugeBar(value, min, max, mode = "throttle") {
   const num = Number(value);
   const pct = Number.isFinite(num)
     ? clamp(((num - min) / (max - min)) * 100, 0, 100)
     : 0;
-  return `<div class="gauge-bar"><div style="width:${pct}%"></div></div>`;
+  const gaugeClass =
+    mode === "brake" ? "gauge-bar gauge-bar--brake" : "gauge-bar";
+  return `<div class="${gaugeClass}"><div style="width:${pct}%"></div></div>`;
 }
 
 async function syncSessionFromBackend() {
@@ -1240,7 +1567,7 @@ function getReplaySeries(recordingId) {
       rpm: clamp(rpm, 700, 3500),
       temperature: clamp(temperature, 60, 120),
       fuel_liters: clamp(fuel, 2, 55),
-      speed_kmh: clamp(speed, 0, 180),
+      speed_kmh: clamp(speed, 0, SPEED_MAX_KMH),
       gear: clamp(Math.round(speed / 35) || 1, 1, 6),
       battery_voltage: clamp(12.2 + Math.sin(index / 25) * 0.3, 11.5, 14.5),
       throttle_percent: clamp(Math.round(20 + Math.sin(index / 5) * 30), 0, 100),
@@ -1324,6 +1651,7 @@ function normalizeLiveData(payload) {
   const gear = toNumber(payload.gear);
   const batteryVoltage = toNumber(payload.battery_voltage);
   const throttlePercent = toNumber(payload.throttle_percent);
+  const brakePercent = toNumber(payload.brake_percent);
   const intakeAirTemp = toNumber(payload.intake_air_temp);
 
   return {
@@ -1334,6 +1662,7 @@ function normalizeLiveData(payload) {
     gear: gear ?? 0,
     battery_voltage: batteryVoltage ?? 0,
     throttle_percent: throttlePercent ?? 0,
+    brake_percent: brakePercent ?? 0,
     intake_air_temp: intakeAirTemp ?? 0,
     connected,
     read_interval_ms: intervalMs,
@@ -1407,8 +1736,24 @@ function generateSimulatedLiveData(previousLiveData) {
     gear: 1,
     battery_voltage: 12.4,
     throttle_percent: 5,
+    brake_percent: 0,
     intake_air_temp: 22,
   };
+
+  if (state.simControls.gas || state.simControls.brake) {
+    const driven = applyLocalDriveToLiveData(prev);
+    return {
+      ...prev,
+      ...driven,
+      connected: false,
+      read_interval_ms: resolvePollInterval(),
+      mode: "simulator",
+      profile: "simulation",
+      last_error: null,
+      data_source: { ...CLIENT_FALLBACK_SOURCE },
+    };
+  }
+
   return {
     rpm: clamp(Math.round(prev.rpm + randomInRange(-120, 120)), 700, 3200),
     temperature: clamp(
@@ -1424,7 +1769,7 @@ function generateSimulatedLiveData(previousLiveData) {
     speed_kmh: clamp(
       Math.round((prev.speed_kmh || 0) + randomInRange(-3, 5)),
       0,
-      180
+      SPEED_MAX_KMH
     ),
     gear: prev.gear || 1,
     battery_voltage: clamp(

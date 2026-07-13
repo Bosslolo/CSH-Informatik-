@@ -9,6 +9,7 @@ export interface CarState {
   gear: number;
   battery_voltage: number;
   throttle_percent: number;
+  brake_percent: number;
   intake_air_temp: number;
   timestamp: string;
 }
@@ -23,6 +24,7 @@ export const DEFAULT_CAR_STATE: CarState = {
   gear: 1,
   battery_voltage: 12.4,
   throttle_percent: 0,
+  brake_percent: 0,
   intake_air_temp: 18,
   timestamp: new Date().toISOString(),
 };
@@ -40,6 +42,7 @@ export function mergeCarState(
     gear: partial.gear ?? base.gear,
     battery_voltage: partial.battery_voltage ?? base.battery_voltage,
     throttle_percent: partial.throttle_percent ?? base.throttle_percent,
+    brake_percent: partial.brake_percent ?? base.brake_percent,
     intake_air_temp: partial.intake_air_temp ?? base.intake_air_temp,
     timestamp: partial.timestamp ?? new Date().toISOString(),
   };
