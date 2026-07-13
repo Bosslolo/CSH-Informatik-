@@ -349,6 +349,49 @@ body {
   margin-bottom: 0.15rem;
 }
 
+.kpi-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.unit-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  border: 1px solid var(--border);
+  background: #0d1117;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.unit-toggle:hover {
+  background: #21262d;
+  color: var(--text);
+}
+
+.unit-toggle-active {
+  color: var(--primary);
+}
+
+.unit-toggle-sep {
+  opacity: 0.45;
+}
+
+.unit-toggle--imperial {
+  border-color: rgba(88, 166, 255, 0.35);
+}
+
+.unit-toggle--metric {
+  border-color: rgba(63, 185, 80, 0.35);
+}
+
 .kpi-header-text {
   min-width: 0;
 }
