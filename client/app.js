@@ -131,6 +131,9 @@ const BUS_KPI_FIELDS = [
   },
 ];
 
+const KM_TO_MI = 0.621371192;
+const SPEED_FIELD_KEY = "speed_kmh";
+
 const state = {
   route: { path: "/", params: {} },
   api: {
@@ -149,6 +152,7 @@ const state = {
     interface: "simulator",
     serialPath: "",
     logging: true,
+    unitSystem: "metric",
   },
   liveHistory: {
     rpm: [],
@@ -218,6 +222,7 @@ function init() {
     state.settings.interface = savedSettings.interface || "simulator";
     state.settings.serialPath = savedSettings.serialPath || "";
     state.settings.logging = savedSettings.logging !== false;
+    state.settings.unitSystem = normalizeUnitSystem(savedSettings.unitSystem);
   }
 
   // Restore persisted route
@@ -372,9 +377,90 @@ function renderSyntheticChip() {
   return `<span class="source-chip">Not from vehicle</span>`;
 }
 
+function normalizeUnitSystem(value) {
+  return value === "imperial" ? "imperial" : "metric";
+}
+
+function convertSpeedKmh(kmh, unitSystem) {
+  const n = Number(kmh);
+  const system = normalizeUnitSystem(unitSystem);
+  if (!Number.isFinite(n)) {
+    return { value: null, unit: system === "imperial" ? "mph" : "km/h" };
+  }
+  if (system === "imperial") {
+    return { value: n * KM_TO_MI, unit: "mph" };
+  }
+  return { value: n, unit: "km/h" };
+}
+
+function getFieldDisplayBounds(field) {
+  if (field.busKey !== SPEED_FIELD_KEY) {
+    return { min: field.min, max: field.max };
+  }
+  const convertedMin = convertSpeedKmh(field.min, state.settings.unitSystem);
+  const convertedMax = convertSpeedKmh(field.max, state.settings.unitSystem);
+  return {
+    min: convertedMin.value ?? field.min,
+    max: convertedMax.value ?? field.max,
+  };
+}
+
+function convertSamplesForDisplay(field, samples) {
+  if (field.busKey !== SPEED_FIELD_KEY) return samples;
+  return samples.map((v) => convertSpeedKmh(v, state.settings.unitSystem).value);
+}
+
+function getDisplayUnit(field) {
+  if (field.busKey !== SPEED_FIELD_KEY) return field.unit;
+  return convertSpeedKmh(0, state.settings.unitSystem).unit;
+}
+
+function persistSettings() {
+  saveState("csh-settings", {
+    pollIntervalMs: state.settings.pollIntervalMs,
+    interface: state.settings.interface,
+    serialPath: state.settings.serialPath,
+    logging: state.settings.logging,
+    unitSystem: state.settings.unitSystem,
+  });
+}
+
+function toggleSpeedUnits() {
+  state.settings.unitSystem =
+    state.settings.unitSystem === "imperial" ? "metric" : "imperial";
+  persistSettings();
+  render();
+}
+
+function renderSpeedUnitToggle() {
+  const isImperial = state.settings.unitSystem === "imperial";
+  return `
+    <button
+      type="button"
+      class="unit-toggle${isImperial ? " unit-toggle--imperial" : " unit-toggle--metric"}"
+      data-action="toggle-speed-units"
+      title="Switch speed units"
+      aria-label="Switch speed units"
+    >
+      <span class="${isImperial ? "" : "unit-toggle-active"}">km/h</span>
+      <span class="unit-toggle-sep" aria-hidden="true">/</span>
+      <span class="${isImperial ? "unit-toggle-active" : ""}">mph</span>
+    </button>
+  `;
+}
+
 function formatKpiValue(field, value) {
-  const formatted =
-    field.format === "decimal" ? formatDecimal(value) : formatNumber(value);
+  let displayValue = value;
+  let useDecimal = field.format === "decimal";
+  if (field.busKey === SPEED_FIELD_KEY) {
+    displayValue = convertSpeedKmh(value, state.settings.unitSystem).value;
+    if (state.settings.unitSystem === "imperial") {
+      useDecimal = true;
+    }
+  }
+  const formatted = useDecimal
+    ? formatDecimal(displayValue)
+    : formatNumber(displayValue);
   return `${formatted}${field.suffix || ""}`;
 }
 
@@ -429,10 +515,18 @@ function renderKpiCard(field, options = {}) {
     extraHtml = "",
     subtleSuffix = "",
   } = options;
+  const bounds = getFieldDisplayBounds(field);
+  const displaySamples = convertSamplesForDisplay(field, samples);
+  const displayValue =
+    field.busKey === SPEED_FIELD_KEY
+      ? convertSpeedKmh(value, state.settings.unitSystem).value
+      : value;
   const gaugeHtml =
-    field.showGauge && Number.isFinite(Number(value))
-      ? renderGaugeBar(value, field.min, field.max)
+    field.showGauge && Number.isFinite(Number(displayValue))
+      ? renderGaugeBar(displayValue, bounds.min, bounds.max)
       : "";
+  const unitToggle =
+    field.busKey === SPEED_FIELD_KEY ? renderSpeedUnitToggle() : "";
   return `
     <article class="card kpi-card">
       ${syntheticChip}
@@ -441,14 +535,17 @@ function renderKpiCard(field, options = {}) {
           <p class="kpi-label">${escapeHtml(field.label)}</p>
           <code class="bus-field-key">${escapeHtml(field.busKey)}</code>
         </div>
-        ${renderTinySparkline(samples, field.min, field.max)}
+        <div class="kpi-header-actions">
+          ${unitToggle}
+          ${renderTinySparkline(displaySamples, bounds.min, bounds.max)}
+        </div>
       </div>
       <div class="kpi-body">
         <p class="kpi-value">${formatKpiValue(field, value)}</p>
         ${renderFieldLiveFlow(field)}
       </div>
       ${gaugeHtml}
-      <p class="subtle">${escapeHtml(field.unit)}${subtleSuffix}</p>
+      <p class="subtle">${escapeHtml(getDisplayUnit(field))}${subtleSuffix}</p>
       ${extraHtml}
     </article>
   `;
@@ -785,6 +882,17 @@ function renderSettingsView() {
             <option value="false" ${!state.settings.logging ? "selected" : ""}>disabled</option>
           </select>
         </label>
+        <label>
+          Speed units
+          <select name="unitSystem">
+            <option value="metric" ${
+              state.settings.unitSystem === "metric" ? "selected" : ""
+            }>Metric (km/h)</option>
+            <option value="imperial" ${
+              state.settings.unitSystem === "imperial" ? "selected" : ""
+            }>Imperial (mph)</option>
+          </select>
+        </label>
         <div class="button-row">
           <button class="primary" type="submit">Apply Settings</button>
           <button type="button" data-action="refresh-now">Refresh Data Now</button>
@@ -844,6 +952,11 @@ function onViewClick(event) {
   if (action === "refresh-now") {
     refreshLiveData();
     refreshRecordings();
+    return;
+  }
+
+  if (action === "toggle-speed-units") {
+    toggleSpeedUnits();
   }
 }
 
@@ -861,18 +974,17 @@ function onViewSubmit(event) {
   const nextInterface = String(formData.get("interfaceMode") || "simulator");
   const nextSerialPath = String(formData.get("serialPath") || "");
   const nextLogging = String(formData.get("logging") || "true") === "true";
+  const nextUnitSystem = normalizeUnitSystem(
+    String(formData.get("unitSystem") || state.settings.unitSystem)
+  );
 
   state.settings.pollIntervalMs = nextInterval;
   state.settings.interface = nextInterface;
   state.settings.serialPath = nextSerialPath;
   state.settings.logging = nextLogging;
+  state.settings.unitSystem = nextUnitSystem;
 
-  saveState("csh-settings", {
-    pollIntervalMs: nextInterval,
-    interface: nextInterface,
-    serialPath: nextSerialPath,
-    logging: nextLogging,
-  });
+  persistSettings();
 
   ensureLivePolling(nextInterval);
   void applySessionToBackend({
