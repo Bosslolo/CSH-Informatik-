@@ -22,6 +22,10 @@ const PAGE_META = {
     title: "Settings",
     subtitle: "Manage polling, interface and logging",
   },
+  "/guide": {
+    title: "How to use this Website - for dummies",
+    subtitle: "A simple step-by-step guide for new users",
+  },
 };
 
 const WAITING_DATA_SOURCE = {
@@ -268,6 +272,7 @@ function parseRoute(hashValue) {
     return { path: "/recordings/:id", params: { id } };
   }
   if (path === "/settings") return { path: "/settings", params: {} };
+  if (path === "/guide") return { path: "/guide", params: {} };
   return { path: "/", params: {} };
 }
 
@@ -609,6 +614,10 @@ function renderRouteContent() {
     viewEl.innerHTML = renderSettingsView();
     return;
   }
+  if (state.route.path === "/guide") {
+    viewEl.innerHTML = renderGuideView();
+    return;
+  }
   viewEl.innerHTML = "";
 }
 
@@ -739,6 +748,88 @@ function renderReplayView(recordingId) {
       </div>
     </article>
     ${renderReplayKpiCards(points, index)}
+  `;
+}
+
+function renderGuideView() {
+  return `
+    <article class="card guide-page">
+      <h3 class="guide-title">How to use this Website - for dummies</h3>
+      <p class="guide-intro">
+        Welcome! This page explains the CSH Auto Data dashboard in plain language.
+        No car-bus expert knowledge required — just follow the steps below.
+      </p>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 1 — Open the app</h4>
+        <p>
+          Start the project from the <code>package</code> folder (double-click
+          <strong>Start CSH Auto Data.command</strong> on Mac, or run
+          <code>npm start</code> in the terminal). Your browser opens this dashboard automatically.
+        </p>
+      </section>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 2 — Use the menu on the left</h4>
+        <p>
+          The sidebar is your main menu. Click a link to switch pages:
+        </p>
+        <ul class="guide-list">
+          <li><strong>Dashboard</strong> — live car data (RPM, speed, fuel, and more)</li>
+          <li><strong>Recordings</strong> — list of saved driving sessions</li>
+          <li><strong>Replay</strong> — watch a recording play back step by step</li>
+          <li><strong>Settings</strong> — change how often data is refreshed and which data source to use</li>
+          <li><strong>How to use</strong> — you are here!</li>
+        </ul>
+      </section>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 3 — Read the Dashboard</h4>
+        <p>
+          On the <strong>Dashboard</strong>, each card shows one value from the car bus
+          (for example engine RPM or fuel level). Numbers update automatically every second or so.
+        </p>
+        <p>
+          Look at the coloured badge in the sidebar: it tells you where the data comes from
+          (real car, demo, or offline simulation). If the backend is not running, the app still
+          shows simulated numbers so you can explore the UI.
+        </p>
+      </section>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 4 — Browse Recordings</h4>
+        <p>
+          Go to <strong>Recordings</strong> to see saved sessions. Click <strong>Open</strong> on a row
+          to jump into replay mode, or <strong>Export JSON</strong> to download the data as a file.
+        </p>
+      </section>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 5 — Replay a session</h4>
+        <p>
+          On the <strong>Replay</strong> page, press <strong>Play</strong> to animate the recording.
+          Use <strong>Pause</strong> to stop, <strong>Reset</strong> to go back to the start, and
+          <strong>Back to list</strong> to pick another recording.
+        </p>
+      </section>
+
+      <section class="guide-section">
+        <h4 class="guide-heading">Step 6 — Adjust Settings (optional)</h4>
+        <p>
+          In <strong>Settings</strong> you can change the polling interval (how fast values refresh),
+          switch between simulator and real hardware (ELM327), and turn logging on or off.
+          Click <strong>Apply Settings</strong> when you are done.
+        </p>
+      </section>
+
+      <section class="guide-section guide-section--tip">
+        <h4 class="guide-heading">Quick tip</h4>
+        <p>
+          Yellow or red banners at the top are not errors to panic about — they usually mean
+          you are viewing demo or offline data. Click <a href="#/">Dashboard</a> anytime to return to live values.
+        </p>
+      </section>
+    </article>
   `;
 }
 

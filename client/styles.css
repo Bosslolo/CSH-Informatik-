@@ -608,6 +608,86 @@ select {
   transition: width 200ms ease;
 }
 
+.guide-page {
+  color: #ff8ec8;
+  border-color: rgba(255, 142, 200, 0.35);
+  background: linear-gradient(160deg, #1a1220 0%, var(--panel) 45%);
+}
+
+.guide-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffb6dd;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.guide-intro {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #ff9ed0;
+}
+
+.guide-section {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 142, 200, 0.2);
+}
+
+.guide-section--tip {
+  border-top-color: rgba(255, 182, 221, 0.35);
+}
+
+.guide-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffc4e3;
+}
+
+.guide-page p {
+  margin: 0.45rem 0 0;
+  line-height: 1.55;
+  color: #ff8ec8;
+}
+
+.guide-page strong {
+  color: #ffd0eb;
+}
+
+.guide-page code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  background: rgba(255, 142, 200, 0.12);
+  border: 1px solid rgba(255, 142, 200, 0.25);
+  color: #ffb6dd;
+}
+
+.guide-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+  color: #ff8ec8;
+}
+
+.guide-list li {
+  margin-bottom: 0.35rem;
+}
+
+.guide-page a {
+  color: #ffb6dd;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.guide-page a:hover {
+  color: #ffd0eb;
+}
+
 @media (max-width: 960px) {
   .layout {
     grid-template-columns: 1fr;
