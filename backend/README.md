@@ -63,3 +63,5 @@ All `/api/*` routes require header `x-api-key: csh-secure-v1`.
 
 1. New class implementing `BusAdapter` in `src/adapters/`
 2. Register in `src/adapters/registry.ts`
+
+All rights reserved. CSH School Final 2026

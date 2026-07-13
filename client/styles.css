@@ -688,6 +688,21 @@ select {
   color: #ffd0eb;
 }
 
+.guide-footer-image {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 142, 200, 0.2);
+  text-align: center;
+}
+
+.guide-footer-image img {
+  display: block;
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
 @media (max-width: 960px) {
   .layout {
     grid-template-columns: 1fr;

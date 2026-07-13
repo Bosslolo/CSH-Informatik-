@@ -772,14 +772,15 @@ function renderGuideView() {
       <section class="guide-section">
         <h4 class="guide-heading">Step 2 — Use the menu on the left</h4>
         <p>
-          The sidebar is your main menu. Click a link to switch pages:
+          The sidebar is your main menu. Switch between different applications.
+          Click a link to switch pages:
         </p>
         <ul class="guide-list">
+          <li><strong>How to use</strong> — you are here! This is the beginner guide on how to use the website</li>
           <li><strong>Dashboard</strong> — live car data (RPM, speed, fuel, and more)</li>
           <li><strong>Recordings</strong> — list of saved driving sessions</li>
           <li><strong>Replay</strong> — watch a recording play back step by step</li>
           <li><strong>Settings</strong> — change how often data is refreshed and which data source to use</li>
-          <li><strong>How to use</strong> — you are here!</li>
         </ul>
       </section>
 
@@ -829,6 +830,10 @@ function renderGuideView() {
           you are viewing demo or offline data. Click <a href="#/">Dashboard</a> anytime to return to live values.
         </p>
       </section>
+
+      <div class="guide-footer-image">
+        <img src="./assets/hello-kitty.png" alt="Hello Kitty" />
+      </div>
     </article>
   `;
 }
