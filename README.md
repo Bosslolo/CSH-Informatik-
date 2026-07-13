@@ -46,3 +46,5 @@ CSH-Informatik-/
 
 Use **GitHub Desktop** + **github.com** for pull → branch → commit → push → merge PR.  
 Ask your AI: *"I'm [Tim/Laurin/Jana] — help me with the team sync workflow."*
+
+All rights reserved. CSH School Final 2026.
